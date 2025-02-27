@@ -1,42 +1,12 @@
-"use client";
-
-import { useState } from "react";
 import Meadow from "~/components/goals/meadow";
-import { PlantVisualizer } from "~/components/goals/plant-visualizer";
-import { Slider } from "~/components/ui/slider";
-import { type Goal } from "~/server/db/schema";
+import { getGoalsByUserId } from "~/server/queries/goals";
 
-export default function Page() {
-  const [value, setValue] = useState<number>(0);
-  const goals = 
+export default async function Page() {
+  const goals = await getGoalsByUserId("c3b9cd23-1298-41a1-889c-8f7639aff150");
 
   return (
     <div className="h-full w-full items-center justify-center">
-      <Meadow
-        flowers={[
-          {
-            id: "1",
-            name: "Lambo",
-            target: 10000,
-            amount: 5000,
-            target_date: new Date("2022-05-01"),
-          } as Goal,
-          {
-            id: "2",
-            name: "Investice",
-            target: 50000,
-            amount: 45000,
-            target_date: new Date("2025-03-10"),
-          } as Goal,
-          {
-            id: "3",
-            name: "Dovolená",
-            target: 20000,
-            amount: 3000,
-            target_date: new Date("2025-12-31"),
-          } as Goal,
-        ]}
-      />
+      <Meadow flowers={goals} />
     </div>
   );
 }
