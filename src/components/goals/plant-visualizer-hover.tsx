@@ -10,11 +10,14 @@ import {
 import { GoalCard } from "./goal-card";
 import { type Goal } from "~/server/db/schema";
 import { redirect } from "next/navigation";
+import { Plus } from "lucide-react";
 
 const progress_to_stage = (progress: number): string => {
   const path = "/plant-growth/kytka{index}.svg";
 
-  if (progress < 20) {
+  if (progress === -1) {
+    return "/plant-growth/kytka_test.svg";
+  } else if (progress < 20) {
     return path.replace("{index}", "1");
   } else if (progress < 40) {
     return path.replace("{index}", "2");
@@ -41,7 +44,33 @@ export function PlantVisualizerHover({
   width?: number;
 }) {
   const progress = (goal.amount / goal.target) * 100;
-  const imagePath = progress_to_stage(progress);
+  const imagePath =
+    goal.id !== "plus_sign"
+      ? progress_to_stage(progress)
+      : progress_to_stage(-1);
+
+  if (goal.id === "plus_sign") {
+    return (
+      <div className="absolute cursor-pointer" style={style}>
+        <div className="flex flex-col items-center">
+          <Plus className="bouncing-plus" size={45} />
+          <Image
+            src={imagePath}
+            alt="MLEMLEMFL"
+            width={width + 20}
+            height={height + 20}
+            className="animate-sway"
+          />
+          {show_name && (
+            <p className="-mb-2 text-center text-lg font-bold text-black">
+              Add Goal
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
