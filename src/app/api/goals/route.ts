@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     const { user_id, name, amount, target, target_date } = body;
 
     try {
-        const newGoal = await addGoal(user_id, name, amount, target, target_date ? new Date(target_date) : null);
+        const newGoal = await addGoal(user_id, name, amount, target, target_date ? new Date(target_date) : undefined);
         return new Response(JSON.stringify(newGoal[0]), {
             headers: {
                 "Content-Type": "application/json",

@@ -91,7 +91,7 @@ export const goals = createTable("goals", {
   target_date: timestamp("target_timestamp", {
     mode: "date",
     withTimezone: true,
-  }),
+  }).notNull().default(sql`NOW()`),
 });
 
 export type Goal = typeof goals.$inferSelect;

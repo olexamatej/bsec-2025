@@ -3,27 +3,12 @@ import { db } from "../db";
 import { goalCheckpoints, goals } from "../db/schema";
 
 export const addGoal = async (
-  user_id: string,
-  name: string,
-  amount: number,
-  target: number,
-  target_date: Date | null,
+    user_id: string,
+    name: string,
+    amount: number,
+    target: number,
+    target_date: Date | undefined,
 ) => {
-<<<<<<< HEAD
-  return await db.insert(goals).values({
-    user_id,
-    name,
-    amount,
-    target,
-    target_date: target_date,
-  });
-};
-
-export const getGoalsByUserId = async (user_id: string) => {
-  return await db.query.goals.findMany({
-    where: eq(goals.user_id, user_id),
-  });
-=======
     return await db.insert(goals).values({
         user_id,
         name,
@@ -40,22 +25,13 @@ export const getGoalsByUserId = async (user_id: string) => {
             checkpoints: true,
         },
     });
->>>>>>> ca63fa869251370331da3cf551bb8206c4a3438b
 };
 
 export const deleteGoal = async (id: string) => {
-  return await db.delete(goals).where(eq(goals.id, id));
+    return await db.delete(goals).where(eq(goals.id, id));
 };
 
 export const getGoalById = async (id: string) => {
-<<<<<<< HEAD
-  return await db.query.goals.findFirst({
-    where: eq(goals.id, id),
-  });
-};
-
-export type GoalWithDeps = Awaited<ReturnType<typeof getGoalsByUserId>>[number];
-=======
     return await db.query.goals.findFirst({
         where: eq(goals.id, id),
         with: {
@@ -73,4 +49,3 @@ export const addGoalCheckpoint = async (goal_id: string, interval_amount: number
         interval,
     });
 };
->>>>>>> ca63fa869251370331da3cf551bb8206c4a3438b
