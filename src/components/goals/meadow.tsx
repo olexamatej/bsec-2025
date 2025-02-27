@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { type Goal } from "~/server/db/schema";
+import { Card, CardContent } from "~/components/ui/card";
 import { PlantVisualizerHover } from "./plant-visualizer-hover";
+import { UserWithDeps } from "~/server/queries/user";
 
 type Position = {
   top: string;
@@ -10,8 +12,21 @@ type Position = {
   scale: number;
 };
 
-export default function Meadow({ flowers }: { flowers: Array<Goal> }) {
+export default function Meadow({
+  user,
+  showUserProfile,
+}: {
+  user: UserWithDeps;
+  showUserProfile: boolean;
+}) {
   const [positions, setPositions] = useState<Position[]>([]);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   useEffect(() => {
     const generatePositions = () => {
@@ -20,7 +35,7 @@ export default function Meadow({ flowers }: { flowers: Array<Goal> }) {
       const meadowHeight = 0.7 * window.innerHeight;
       const flowerSize = 100;
 
-      flowers.forEach(() => {
+      user?.goals.forEach(() => {
         let validPosition = false;
         let newPos: Position;
 
@@ -48,7 +63,36 @@ export default function Meadow({ flowers }: { flowers: Array<Goal> }) {
 
   return (
     <div className="relative h-full w-full rounded-lg bg-green-300">
-      {flowers.map((flower, index) => (
+      {showUserProfile && user && (
+        <div className="absolute left-0 top-0 flex items-center p-4">
+          <Card className="flex w-32 flex-col items-center justify-center">
+            <CardContent className="flex flex-row items-center justify-center py-2">
+              <img
+                src={user.avatar_url || "/default-profile.png"}
+                alt="Profile"
+                className="mr-2 h-8 w-8 rounded-full"
+              />
+              <span className="text-lg font-semibold">{user.display_name}</span>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+      <div className="absolute right-0 top-0 flex items-center p-4">
+        <Card
+          className="flex w-[210px] cursor-pointer flex-col items-center justify-center"
+          onClick={handleCopy}
+        >
+          <CardContent className="flex flex-row items-center justify-center py-2">
+            <span className="text-lg font-semibold">Share this garden</span>
+          </CardContent>
+        </Card>
+        {copied && (
+          <div className="absolute right-0 top-0 mr-2 mt-2 rounded bg-green-500 p-2 text-white">
+            Link copied!
+          </div>
+        )}
+      </div>
+      {user?.goals.map((flower, index) => (
         <PlantVisualizerHover
           goal={flower}
           key={index}

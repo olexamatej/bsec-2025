@@ -11,7 +11,7 @@ import {
   Target,
   ListOrdered,
   Settings,
-  User,
+  Rss,
 } from "lucide-react";
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
@@ -50,6 +50,11 @@ export function SidebarContent({
       title: "Analytics",
       href: "/analytics",
       icon: <LineChart className="mr-2 h-4 w-4" />,
+    },
+    {
+      title: "Feed",
+      href: "/feed",
+      icon: <Rss className="mr-2 h-4 w-4" />,
     },
   ];
 
