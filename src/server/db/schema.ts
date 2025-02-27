@@ -92,7 +92,9 @@ export const goals = createTable("goals", {
   target_date: timestamp("target_timestamp", {
     mode: "date",
     withTimezone: true,
-  }),
+  })
+    .notNull()
+    .default(sql`NOW()`),
 });
 
 export type Goal = typeof goals.$inferSelect;
@@ -337,3 +339,22 @@ export const userBalanceView = pgView("user_balance").as((qb) => {
     .leftJoin(totalIncoming, eq(users.id, totalIncoming.user_id))
     .leftJoin(totalOutgoing, eq(users.id, totalOutgoing.user_id));
 });
+
+export const goalTransactions = createTable("goal_transactions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  goal_id: uuid("goal_id")
+    .notNull()
+    .references(() => goals.id),
+  order_type: standingOrderType("order_type").notNull(),
+  amount: integer("amount").notNull(),
+});
+
+export const goalTransactionRelations = relations(
+  goalTransactions,
+  ({ one }) => ({
+    goal: one(goals, {
+      fields: [goalTransactions.goal_id],
+      references: [goals.id],
+    }),
+  }),
+);

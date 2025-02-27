@@ -25,7 +25,7 @@ export function UserSelector({ users, selectedUserId }: UserSelectorProps) {
   };
 
   return (
-    <div className="px-2">
+    <div className="px-2 pt-4">
       <Select defaultValue={selectedUserId} onValueChange={handleUserChange}>
         <SelectTrigger>
           <SelectValue placeholder="Select user" />

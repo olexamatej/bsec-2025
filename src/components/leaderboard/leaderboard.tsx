@@ -43,7 +43,7 @@ export default function Leaderboard({
   const router = useRouter();
 
   const handleUserClick = (userId: string) => {
-    router.push(`/goals/${userId}`);
+    router.push(`/goals?user_id=${userId}`);
   };
 
   return (
