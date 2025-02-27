@@ -1,9 +1,16 @@
+import { desc } from "drizzle-orm";
 import { db } from "~/server/db";
+import { comments } from "~/server/db/schema";
 
 export async function getPosts() {
   return db.query.posts.findMany({
     with: {
-      comments: true,
+      comments: {
+        orderBy: [desc(comments.createdAt)],
+        with: {
+          user: true,
+        },
+      },
       user: true,
       goal: true,
       transaction: {
@@ -12,6 +19,7 @@ export async function getPosts() {
         },
       },
     },
+    orderBy: [desc(comments.createdAt)],
   });
 }
 

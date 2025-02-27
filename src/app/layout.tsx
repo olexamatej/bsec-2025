@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { Sidebar } from "~/components/ui/sidebar";
 import { Providers } from "./providers";
+import { getUserId } from "~/lib/get-user-id";
 
 // export const metadata: Metadata = {
 //   title: "Create T3 App",
@@ -9,14 +10,33 @@ import { Providers } from "./providers";
 //   icons: [{ rel: "icon", url: "/favicon.ico" }],
 // };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const userId = await getUserId();
+
+  if (!userId) {
+    return (
+      <html lang="en" className={`${GeistSans.variable}`}>
+        <body className="flex h-screen">
+          <Sidebar name="FinLexa" />
+          <main className="flex-1 overflow-auto p-6">
+            <div className="flex h-full items-center justify-center">
+              <h1 className="text-4xl font-bold">Loading...</h1>
+            </div>
+          </main>
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body className="flex h-screen">
         <Sidebar name="FinLexa" />
-        <main className="flex-1 overflow-auto p-6">{children}</main>
+        <main className="flex-1 overflow-auto p-6">
+          <Providers userId={userId}>{children}</Providers>
+        </main>
       </body>
     </html>
   );

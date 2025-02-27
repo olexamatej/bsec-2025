@@ -60,7 +60,7 @@ export const comments = createTable("comments", {
     .notNull(),
 });
 
-export const commenRelations = relations(comments, ({ one }) => ({
+export const commentRelations = relations(comments, ({ one }) => ({
   user: one(users, {
     fields: [comments.user_id],
     references: [users.id],
@@ -115,7 +115,7 @@ export const goalCheckpoints = createTable("goal_checkpoints", {
   interval_start: timestamp("interval_start", {
     mode: "date",
     withTimezone: true,
-  }).notNull(),
+  }).notNull().default(sql`NOW()`),
   interval: integer("interval").notNull(),
   interval_amount: integer("interval_amount").notNull(),
 });

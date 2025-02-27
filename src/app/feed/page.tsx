@@ -5,7 +5,7 @@ export default async function Page() {
   const posts = await getPosts();
 
   return (
-    <div>
+    <div className="space-y-6">
       {posts.map((post) => (
         <Post key={post.id} post={post} />
       ))}
