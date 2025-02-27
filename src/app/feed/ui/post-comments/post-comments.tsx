@@ -11,6 +11,7 @@ import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import { getCommentAction } from "./get-comments-action";
 import { cn } from "~/lib/utils";
+import { useUserId } from "~/app/_components/user-provider";
 
 function Reply({
   open,
@@ -25,6 +26,7 @@ function Reply({
 }) {
   const [text, setText] = useState("");
 
+  const userId = useUserId();
   const queryClient = useQueryClient();
 
   const { mutateAsync, isPending } = useMutation({
@@ -35,8 +37,7 @@ function Reply({
         formData.append("parentId", parentCommentId);
       }
       formData.append("content", comment);
-      // TODO: Fix when cookie
-      formData.append("userId", post.user_id);
+      formData.append("userId", userId);
       formData.append("postId", post.id);
 
       await postCommentAction(formData);

@@ -27,7 +27,7 @@ export function UserProvider({ initialUserId, children }: UserProvider) {
   );
 }
 
-export function useUser() {
+export function useUserId() {
   const context = useContext(UserContext);
 
   if (!context) {
