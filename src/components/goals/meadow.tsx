@@ -31,7 +31,7 @@ export default function Meadow({
   };
 
   useEffect(() => {
-    flowers.push({
+    user?.goals.push({
       name: "test",
       description: "test",
       id: "plus_sign",
