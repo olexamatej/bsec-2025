@@ -10,6 +10,7 @@ import {
   text,
   timestamp,
   uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -41,7 +42,9 @@ export const userRelations = relations(users, ({ many }) => ({
 export const comments = createTable("comments", {
   id: uuid("id").primaryKey().defaultRandom(),
 
-  post_id: uuid("post_id").references(() => posts.id),
+  post_id: uuid("post_id")
+    .notNull()
+    .references(() => posts.id),
 
   parent_id: uuid("parent_id").references((): AnyPgColumn => comments.id),
 
@@ -180,7 +183,6 @@ export const transactions = createTable("transactions", {
 
 export type Transaction = typeof transactions.$inferSelect;
 
-
 export const transactionRelations = relations(transactions, ({ one }) => ({
   user: one(users, {
     fields: [transactions.user_id],
@@ -200,6 +202,7 @@ export const tags = createTable("tags", {
     .references(() => users.id, {
       onDelete: "cascade",
     }),
+  color: varchar("color", { length: 6 }).notNull(),
 
   name: text("name").notNull(),
 });
@@ -223,13 +226,14 @@ export const posts = createTable("posts", {
     }),
 
   goal_id: uuid("goal_id").references(() => goals.id),
-  transaction_id: uuid("transaction_id")
-    .references(() => transactions.id, {
-      onDelete: "cascade",
-    }),
+  transaction_id: uuid("transaction_id").references(() => transactions.id, {
+    onDelete: "cascade",
+  }),
 
   content: text("content").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .default(sql`NOW()`),
 });
 
 export const postRelations = relations(posts, ({ one, many }) => ({
