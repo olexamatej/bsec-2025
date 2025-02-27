@@ -9,13 +9,16 @@ export const addGoal = async (
     target: number,
     target_date: Date | undefined,
 ) => {
-    return await db.insert(goals).values({
-        user_id,
-        name,
-        amount,
-        target,
-        target_date: target_date,
-    }).returning();
+    return await db
+        .insert(goals)
+        .values({
+            user_id,
+            name,
+            amount,
+            target,
+            target_date: target_date,
+        })
+        .returning();
 };
 
 export const getGoalsByUserId = async (user_id: string) => {
@@ -36,13 +39,17 @@ export const getGoalById = async (id: string) => {
         where: eq(goals.id, id),
         with: {
             checkpoints: true,
-        }
+        },
     });
-}
+};
 
 export type GoalWithDeps = Awaited<ReturnType<typeof getGoalsByUserId>>[number];
 
-export const addGoalCheckpoint = async (goal_id: string, interval_amount: number, interval: number) => {
+export const addGoalCheckpoint = async (
+    goal_id: string,
+    interval_amount: number,
+    interval: number,
+) => {
     return await db.insert(goalCheckpoints).values({
         goal_id,
         interval_amount,
