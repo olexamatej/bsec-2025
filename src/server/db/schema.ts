@@ -260,3 +260,23 @@ export const postRelations = relations(posts, ({ one, many }) => ({
   }),
   comments: many(comments),
 }));
+
+
+export const goalTransactions = createTable("goal_transactions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  goal_id: uuid("goal_id")
+    .notNull()
+    .references(() => goals.id),
+  order_type: standingOrderType("order_type").notNull(),
+  amount: integer("amount").notNull(),
+});
+
+export const goalTransactionRelations = relations(
+  goalTransactions,
+  ({ one }) => ({
+    goal: one(goals, {
+      fields: [goalTransactions.goal_id],
+      references: [goals.id],
+    }),
+  }),
+);

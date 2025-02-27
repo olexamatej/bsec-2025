@@ -17,7 +17,11 @@ export default async function Page({
 
   return (
     <div className="h-full w-full items-center justify-center">
-      <Meadow user={user} showUserProfile={foreignUserId !== undefined} />
+      <Meadow
+        user={user}
+        key={foreignUserId ?? userId}
+        showUserProfile={foreignUserId !== undefined}
+      />
     </div>
   );
 }

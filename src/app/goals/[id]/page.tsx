@@ -18,6 +18,9 @@ import {
   Flag,
   HandCoins,
 } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { AddFundsDialog } from "./add-funds-dialog";
+import { RemoveFundsDialog } from "./remove-funds-dialog";
 
 export default async function GoalDetailPage({
   params,
@@ -37,8 +40,13 @@ export default async function GoalDetailPage({
         <Card className="md:col-span-1">
           <CardHeader>
             <CardTitle>
-              <div className="flex justify-center">
+              <div className="flex justify-between">
                 <h4 className="text-xl font-bold">{goal.name}</h4>
+                <div className="space-x-2">
+                  <RemoveFundsDialog goal_id={id} />
+                  <AddFundsDialog goal_id={id} />
+                </div>
+                {/* <Button className="ml-4">Add funds</Button> */}
               </div>
             </CardTitle>
           </CardHeader>

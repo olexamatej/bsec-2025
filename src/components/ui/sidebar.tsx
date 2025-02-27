@@ -10,7 +10,7 @@ interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
 
 export async function Sidebar({
   className,
-  name = "John Doe",
+  name = "",
   ...props
 }: SidebarNavProps) {
   const [users, userId] = await Promise.all([getUsers(), getUserId()]);
