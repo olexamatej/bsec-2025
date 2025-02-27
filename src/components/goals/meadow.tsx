@@ -31,6 +31,16 @@ export default function Meadow({
   };
 
   useEffect(() => {
+    flowers.push({
+      name: "test",
+      description: "test",
+      id: "plus_sign",
+      user_id: "test",
+      target: 0,
+      amount: 0,
+      target_date: new Date(),
+    });
+
     const generatePositions = () => {
       const newPositions: Array<Position> = [];
       const meadowWidth = 0.7 * window.innerWidth;

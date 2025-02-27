@@ -266,6 +266,25 @@ export const postRelations = relations(posts, ({ one, many }) => ({
   comments: many(comments),
 }));
 
+export const goalTransactions = createTable("goal_transactions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  goal_id: uuid("goal_id")
+    .notNull()
+    .references(() => goals.id),
+  order_type: standingOrderType("order_type").notNull(),
+  amount: integer("amount").notNull(),
+});
+
+export const goalTransactionRelations = relations(
+  goalTransactions,
+  ({ one }) => ({
+    goal: one(goals, {
+      fields: [goalTransactions.goal_id],
+      references: [goals.id],
+    }),
+  }),
+);
+
 export const userBalanceView = pgView("user_balance").as((qb) => {
   const incomingUnion = qb
     .select({
@@ -282,6 +301,16 @@ export const userBalanceView = pgView("user_balance").as((qb) => {
         })
         .from(standingOrders)
         .where(eq(standingOrders.order_type, "incoming")),
+    )
+    .unionAll(
+      qb
+        .select({
+          user_id: goals.user_id,
+          amount: goalTransactions.amount,
+        })
+        .from(goalTransactions)
+        .where(eq(goalTransactions.order_type, "outgoing"))
+        .innerJoin(goals, eq(goalTransactions.goal_id, goals.id)),
     )
     .as("incoming_union");
 
@@ -313,6 +342,16 @@ export const userBalanceView = pgView("user_balance").as((qb) => {
         .from(standingOrders)
         .where(eq(standingOrders.order_type, "outgoing")),
     )
+    .unionAll(
+      qb
+        .select({
+          user_id: goals.user_id,
+          amount: goalTransactions.amount,
+        })
+        .from(goalTransactions)
+        .where(eq(goalTransactions.order_type, "incoming"))
+        .innerJoin(goals, eq(goalTransactions.goal_id, goals.id)),
+    )
     .as("outgoing_union");
 
   const totalOutgoing = qb
@@ -339,22 +378,3 @@ export const userBalanceView = pgView("user_balance").as((qb) => {
     .leftJoin(totalIncoming, eq(users.id, totalIncoming.user_id))
     .leftJoin(totalOutgoing, eq(users.id, totalOutgoing.user_id));
 });
-
-export const goalTransactions = createTable("goal_transactions", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  goal_id: uuid("goal_id")
-    .notNull()
-    .references(() => goals.id),
-  order_type: standingOrderType("order_type").notNull(),
-  amount: integer("amount").notNull(),
-});
-
-export const goalTransactionRelations = relations(
-  goalTransactions,
-  ({ one }) => ({
-    goal: one(goals, {
-      fields: [goalTransactions.goal_id],
-      references: [goals.id],
-    }),
-  }),
-);
