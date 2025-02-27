@@ -21,3 +21,7 @@ export const getTransactionsByUserId = async (user_id: string) => {
         where: eq(transactions.user_id, user_id),
     });
 }
+
+export const deleteTransaction = async (id: string) => {
+    return await db.delete(transactions).where(eq(transactions.id, id));
+}

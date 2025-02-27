@@ -1,13 +1,19 @@
 import { getTransactionsByUserId } from "~/server/queries/transactions";
 import { TransactionList } from "./_components/transaction_list";
+import { AddTransactionDialog } from "./_components/add-transaction-dialog";
 
 export default async function TransactionsPage() {
-  const transactions = await getTransactionsByUserId("");
+  const transactions = await getTransactionsByUserId(
+    "c3b9cd23-1298-41a1-889c-8f7639aff150",
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="container mx-auto px-4 py-8">
-        <h1 className="mb-8 text-3xl font-bold">All Transactions</h1>
+        <div className="mb-8 flex items-center justify-between">
+          <h1 className="text-3xl font-bold">All Transactions</h1>
+          <AddTransactionDialog />
+        </div>
         <TransactionList transactions={transactions} />
       </main>
     </div>

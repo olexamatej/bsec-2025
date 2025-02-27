@@ -14,6 +14,7 @@ import {
 import { Trash2, Search, ArrowUpDown } from "lucide-react";
 import { Transaction } from "~/server/db/schema";
 import { useIsMounted } from "~/lib/use-is-mounted";
+import { deleteTransactionClient } from "~/lib/api/transactions";
 
 export function TransactionList(transactions: { transactions: Transaction[] }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -104,7 +105,7 @@ export function TransactionList(transactions: { transactions: Transaction[] }) {
                 key={transaction.id}
                 className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-4 rounded-lg border p-3"
               >
-                <div className="font-medium">{transaction.id}</div>
+                <div className="font-medium">{transaction.description}</div>
 
                 <div className={"text-right text-green-600"}>
                   {"+"}${transaction.amount.toFixed(2)}
@@ -119,10 +120,7 @@ export function TransactionList(transactions: { transactions: Transaction[] }) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={
-                      // () => deleteTransaction(transaction.id)
-                      () => {}
-                    }
+                    onClick={() => deleteTransactionClient(transaction.id)}
                   >
                     <Trash2 className="h-4 w-4" />
                     <span className="sr-only">Delete</span>

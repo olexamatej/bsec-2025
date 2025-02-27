@@ -1,7 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { relations, sql } from "drizzle-orm";
+import { desc, relations, sql } from "drizzle-orm";
 import {
   type AnyPgColumn,
   integer,
@@ -83,6 +83,7 @@ export const goals = createTable("goals", {
 
   name: text("name").notNull(),
   amount: integer("amount").notNull(),
+  target: integer("target").notNull(),
   target_date: timestamp("timestamp", { mode: "date", withTimezone: true }),
 });
 
@@ -172,6 +173,7 @@ export const transactions = createTable("transactions", {
   amount: integer("amount").notNull(),
   tag_id: uuid("tag_id").references(() => tags.id),
   timestamp: timestamp("timestamp", { withTimezone: true }).notNull(),
+  description: text("description").notNull().default(""),
 
   transaction_type: standingOrderType("transaction_type").notNull(),
 });
@@ -221,7 +223,10 @@ export const posts = createTable("posts", {
     }),
 
   goal_id: uuid("goal_id").references(() => goals.id),
-  transaction_id: uuid("transaction_id").references(() => transactions.id),
+  transaction_id: uuid("transaction_id")
+    .references(() => transactions.id, {
+      onDelete: "cascade",
+    }),
 
   content: text("content").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }),
