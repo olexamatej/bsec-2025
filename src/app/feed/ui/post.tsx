@@ -6,7 +6,6 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import type { Post } from "../lib/get-posts";
-import Image from "next/image";
 import { Avatar } from "~/app/_components/avatar";
 import { PostGoal } from "./post-goal";
 import { PostTransaction } from "./post-transaction";
