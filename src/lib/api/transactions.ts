@@ -25,3 +25,10 @@ export function deleteTransactionClient(id: string) {
 
     return data;
 }
+
+export function createPost({ transaction_id, content, user_id, goal_id }: { transaction_id: string | undefined; content: string, user_id: string, goal_id: string | undefined }) {
+    return apiRequest(`/api/posts`, {
+        method: "POST",
+        body: JSON.stringify({ transaction_id, content, user_id, goal_id }),
+    });
+}

@@ -11,18 +11,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Trash2, Search, ArrowUpDown } from "lucide-react";
+import { Trash2, Search, ArrowUpDown, Share } from "lucide-react";
 import { TransactionWithDeps } from "~/server/queries/transactions";
 import { useIsMounted } from "~/lib/use-is-mounted";
-import { deleteTransactionClient } from "~/lib/api/transactions";
+import { deleteTransactionClient, createPost } from "~/lib/api/transactions";
 import { Badge } from "~/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTrigger,
+  DialogClose,
+  DialogTitle,
+} from "~/components/ui/dialog";
+import { getUserId } from "~/lib/get-user-id";
+import { useUserId } from "~/app/_components/user-provider";
+import { useRouter } from "next/navigation";
 
 export function TransactionList(data: { transactions: TransactionWithDeps[] }) {
+  const userId = useUserId();
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "amount">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [selectedTransactionId, setSelectedTransactionId] = useState<
+    string | null
+  >(null);
 
   const isMounted = useIsMounted();
+  const router = useRouter();
 
   // Filter transactions based on search term and type
   const filteredTransactions = data.transactions.filter((transaction) => {
@@ -46,6 +65,32 @@ export function TransactionList(data: { transactions: TransactionWithDeps[] }) {
 
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+
+  const handleShareClick = (transactionId: string) => {
+    setSelectedTransactionId(transactionId);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setMessage("");
+  };
+
+  const handlePostCreation = async () => {
+    if (selectedTransactionId && message) {
+      // Call API to create a post
+      await createPost({
+        user_id: userId,
+        transaction_id: selectedTransactionId,
+        content: message,
+        goal_id: undefined,
+      });
+      setIsModalOpen(false);
+      setMessage("");
+      // Navigate to /feed
+      router.push("/feed");
+    }
   };
 
   return (
@@ -136,11 +181,38 @@ export function TransactionList(data: { transactions: TransactionWithDeps[] }) {
                     <Trash2 className="h-4 w-4" />
                     <span className="sr-only">Delete</span>
                   </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleShareClick(transaction.id)}
+                  >
+                    <Share className="h-4 w-4" />
+                    <span className="sr-only">Share</span>
+                  </Button>
                 </div>
               </div>
             ))}
           </div>
         )}
+
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Share your transaction</DialogTitle>
+            </DialogHeader>
+            <Input
+              placeholder="Enter your message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <DialogFooter>
+              <Button onClick={handlePostCreation}>Share</Button>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );

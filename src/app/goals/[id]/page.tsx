@@ -21,6 +21,7 @@ import {
 import { Button } from "~/components/ui/button";
 import { AddFundsDialog } from "./add-funds-dialog";
 import { RemoveFundsDialog } from "./remove-funds-dialog";
+import { ShareGoalDialog } from "./share-goal-dialog";
 
 export default async function GoalDetailPage({
   params,
@@ -45,6 +46,7 @@ export default async function GoalDetailPage({
                 <div className="space-x-2">
                   <RemoveFundsDialog goal_id={id} />
                   <AddFundsDialog goal_id={id} />
+                  <ShareGoalDialog goal_id={id} />
                 </div>
                 {/* <Button className="ml-4">Add funds</Button> */}
               </div>
