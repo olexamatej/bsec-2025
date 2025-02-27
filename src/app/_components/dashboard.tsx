@@ -18,6 +18,7 @@ import { AddGoalDialog } from "~/app/_components/add-goal-dialog"; // adjust the
 import { AddTransactionDialog } from "~/app/transactions/_components/add-transaction-dialog";
 
 import { getTags } from "~/server/queries/tags";
+import Link from "next/link";
 
 interface DashboardProps {
   user: NonNullable<Awaited<ReturnType<typeof getUserById>>>;
@@ -124,74 +125,76 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
                 .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
                 .slice(0, 5)
                 .map((transaction) => (
-                  <div
-                    key={transaction.id}
-                    className="flex items-center justify-between rounded-lg p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`flex h-12 w-12 items-center justify-center rounded-full ${
-                          transaction.transaction_type === "incoming"
-                            ? "bg-green-600"
-                            : "bg-red-600"
-                        }`}
-                      >
-                        {transaction.transaction_type === "incoming" ? (
-                          <ArrowUp className="h-6 w-6 text-green-100" />
-                        ) : (
-                          <ArrowDown className="h-6 w-6 text-red-100" />
-                        )}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <p className="text-base font-medium lg:text-lg">
-                            {transaction.description}
-                          </p>
-                          {transaction.tag_id && (
-                            <span
-                              className="rounded-xl border px-2 py-1 text-sm"
-                              style={{
-                                color: `#${
-                                  tags.find(
-                                    (tag) => tag.id === transaction.tag_id,
-                                  )?.color || "defaultColor"
-                                }`,
-                                backgroundColor: `#${
-                                  tags.find(
-                                    (tag) => tag.id === transaction.tag_id,
-                                  )?.color || "defaultColor"
-                                }20`,
-                                borderColor: `#${
-                                  tags.find(
-                                    (tag) => tag.id === transaction.tag_id,
-                                  )?.color || "defaultColor"
-                                }`,
-                              }}
-                            >
-                              #{" "}
-                              {tags.find((tag) => tag.id === transaction.tag_id)
-                                ?.name || "No tag"}
-                            </span>
+                  <Link key={transaction.id} href={`/transactions`}>
+                    <div className="flex items-center justify-between rounded-lg p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800">
+                      <div className="flex items-center gap-4">
+                        <div
+                          className={`flex h-12 w-12 items-center justify-center rounded-full ${
+                            transaction.transaction_type === "incoming"
+                              ? "bg-green-600"
+                              : "bg-red-600"
+                          }`}
+                        >
+                          {transaction.transaction_type === "incoming" ? (
+                            <ArrowUp className="h-6 w-6 text-green-100" />
+                          ) : (
+                            <ArrowDown className="h-6 w-6 text-red-100" />
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground">
-                          {formatDistanceToNow(transaction.timestamp, {
-                            addSuffix: true,
-                          })}
-                        </p>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="text-base font-medium lg:text-lg">
+                              {transaction.description}
+                            </p>
+                            {transaction.tag_id && (
+                              <span
+                                className="rounded-xl border px-2 py-1 text-sm"
+                                style={{
+                                  color: `#${
+                                    tags.find(
+                                      (tag) => tag.id === transaction.tag_id,
+                                    )?.color || "defaultColor"
+                                  }`,
+                                  backgroundColor: `#${
+                                    tags.find(
+                                      (tag) => tag.id === transaction.tag_id,
+                                    )?.color || "defaultColor"
+                                  }20`,
+                                  borderColor: `#${
+                                    tags.find(
+                                      (tag) => tag.id === transaction.tag_id,
+                                    )?.color || "defaultColor"
+                                  }`,
+                                }}
+                              >
+                                #{" "}
+                                {tags.find(
+                                  (tag) => tag.id === transaction.tag_id,
+                                )?.name || "No tag"}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            {formatDistanceToNow(transaction.timestamp, {
+                              addSuffix: true,
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        className={`text-lg font-medium ${
+                          transaction.transaction_type === "incoming"
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {transaction.transaction_type === "incoming"
+                          ? "+"
+                          : "-"}
+                        ${transaction.amount.toFixed(2)}
                       </div>
                     </div>
-                    <div
-                      className={`text-lg font-medium ${
-                        transaction.transaction_type === "incoming"
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {transaction.transaction_type === "incoming" ? "+" : "-"}$
-                      {transaction.amount.toFixed(2)}
-                    </div>
-                  </div>
+                  </Link>
                 ))}
             </div>
           </CardContent>
@@ -236,33 +239,35 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
                     (goal.amount / goal.target) * 100,
                   );
                   return (
-                    <div
-                      key={goal.id}
-                      className="space-y-3 rounded-lg p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-base font-medium lg:text-lg">
-                            {goal.name}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            Due{" "}
-                            {goal.target_date
-                              ? goal.target_date.toDateString()
-                              : "No date set"}
-                          </p>
+                    <Link key={goal.id} href={`/goals/${goal.id}`}>
+                      <div
+                        key={goal.id}
+                        className="space-y-3 rounded-lg p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-base font-medium lg:text-lg">
+                              {goal.name}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              Due{" "}
+                              {goal.target_date
+                                ? goal.target_date.toDateString()
+                                : "No date set"}
+                            </p>
+                          </div>
+                          <Badge
+                            variant={
+                              progressPercentage > 50 ? "default" : "outline"
+                            }
+                            className="px-3 py-1 text-sm font-medium"
+                          >
+                            ${goal.amount} / ${goal.target}
+                          </Badge>
                         </div>
-                        <Badge
-                          variant={
-                            progressPercentage > 50 ? "default" : "outline"
-                          }
-                          className="px-3 py-1 text-sm font-medium"
-                        >
-                          ${goal.amount} / ${goal.target}
-                        </Badge>
+                        <Progress value={progressPercentage} className="h-3" />
                       </div>
-                      <Progress value={progressPercentage} className="h-3" />
-                    </div>
+                    </Link>
                   );
                 })}
             </div>
