@@ -1,12 +1,13 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { desc, relations, sql } from "drizzle-orm";
+import { desc, eq, relations, sql, sum } from "drizzle-orm";
 import {
   type AnyPgColumn,
   integer,
   pgEnum,
   pgTableCreator,
+  pgView,
   text,
   timestamp,
   uuid,
@@ -115,7 +116,9 @@ export const goalCheckpoints = createTable("goal_checkpoints", {
   interval_start: timestamp("interval_start", {
     mode: "date",
     withTimezone: true,
-  }).notNull().default(sql`NOW()`),
+  })
+    .notNull()
+    .default(sql`NOW()`),
   interval: integer("interval").notNull(),
   interval_amount: integer("interval_amount").notNull(),
 });
@@ -153,9 +156,9 @@ export const standingOrders = createTable("standing_orders", {
   interval_end: timestamp("interval_end", {
     mode: "date",
     withTimezone: true,
-  }).notNull(),
+  }),
+
   interval: integer("interval").notNull(),
-  interval_amount: integer("interval_amount").notNull(),
   description: text("description").notNull().default(""),
   order_type: standingOrderType("order_type").notNull(),
 });
@@ -260,3 +263,77 @@ export const postRelations = relations(posts, ({ one, many }) => ({
   }),
   comments: many(comments),
 }));
+
+export const userBalanceView = pgView("user_balance").as((qb) => {
+  const incomingUnion = qb
+    .select({
+      user_id: transactions.user_id,
+      amount: transactions.amount,
+    })
+    .from(transactions)
+    .where(eq(transactions.transaction_type, "incoming"))
+    .unionAll(
+      qb
+        .select({
+          user_id: standingOrders.user_id,
+          amount: sql<number>`(DIV((LEAST(COALESCE(EXTRACT(EPOCH FROM ${standingOrders.interval_end}), EXTRACT(EPOCH FROM now())), EXTRACT(EPOCH FROM now())) - EXTRACT(EPOCH FROM ${standingOrders.interval_start})), ${standingOrders.interval}) + 1) * ${standingOrders.amount}`,
+        })
+        .from(standingOrders)
+        .where(eq(standingOrders.order_type, "incoming")),
+    )
+    .as("incoming_union");
+
+  const totalIncoming = qb
+    .with(incomingUnion)
+    .select({
+      user_id: incomingUnion.user_id,
+      amount: sql`sum(${incomingUnion.amount})`
+        .mapWith(Number)
+        .as("incoming_amount"),
+    })
+    .from(incomingUnion)
+    .groupBy(incomingUnion.user_id)
+    .as("total_incoming");
+
+  const outgoingUnion = qb
+    .select({
+      user_id: transactions.user_id,
+      amount: transactions.amount,
+    })
+    .from(transactions)
+    .where(eq(transactions.transaction_type, "outgoing"))
+    .unionAll(
+      qb
+        .select({
+          user_id: standingOrders.user_id,
+          amount: sql<number>`(DIV((LEAST(COALESCE(EXTRACT(EPOCH FROM ${standingOrders.interval_end}), EXTRACT(EPOCH FROM now())), EXTRACT(EPOCH FROM now())) - EXTRACT(EPOCH FROM ${standingOrders.interval_start})), ${standingOrders.interval}) + 1) * ${standingOrders.amount}`,
+        })
+        .from(standingOrders)
+        .where(eq(standingOrders.order_type, "outgoing")),
+    )
+    .as("outgoing_union");
+
+  const totalOutgoing = qb
+    .with(outgoingUnion)
+    .select({
+      user_id: outgoingUnion.user_id,
+      amount: sql`sum(${outgoingUnion.amount})`
+        .mapWith(Number)
+        .as("outgoing_amount"),
+    })
+    .from(outgoingUnion)
+    .groupBy(outgoingUnion.user_id)
+    .as("total_outgoing");
+
+  return qb
+    .select({
+      user_id: users.id,
+      amount:
+        sql<number>`coalesce(${totalIncoming.amount},0) - coalesce(${totalOutgoing.amount},0)`
+          .mapWith(Number)
+          .as("amount"),
+    })
+    .from(users)
+    .leftJoin(totalIncoming, eq(users.id, totalIncoming.user_id))
+    .leftJoin(totalOutgoing, eq(users.id, totalOutgoing.user_id));
+});
