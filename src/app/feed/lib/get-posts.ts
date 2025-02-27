@@ -16,6 +16,7 @@ export async function getPosts() {
       transaction: {
         with: {
           tag: true,
+          user: true,
         },
       },
     },

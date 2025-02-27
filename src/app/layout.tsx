@@ -15,21 +15,6 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const userId = await getUserId();
 
-  if (!userId) {
-    return (
-      <html lang="en" className={`${GeistSans.variable}`}>
-        <body className="flex h-screen">
-          <Sidebar name="FinLexa" />
-          <main className="flex-1 overflow-auto p-6">
-            <div className="flex h-full items-center justify-center">
-              <h1 className="text-4xl font-bold">Loading...</h1>
-            </div>
-          </main>
-        </body>
-      </html>
-    );
-  }
-
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body className="flex h-screen">

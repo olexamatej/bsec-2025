@@ -13,6 +13,6 @@ export const getUserById = async (id: string) => {
   });
 };
 
-export const getUsers = async (): Promise<User[]> => {
-  return db.query.users.findMany();
+export const getUsers = async () => {
+  return await db.query.users.findMany();
 };

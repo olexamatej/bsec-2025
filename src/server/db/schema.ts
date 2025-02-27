@@ -91,7 +91,7 @@ export const goals = createTable("goals", {
   target_date: timestamp("target_timestamp", {
     mode: "date",
     withTimezone: true,
-  }),
+  }).notNull().default(sql`NOW()`),
 });
 
 export type Goal = typeof goals.$inferSelect;
@@ -115,7 +115,7 @@ export const goalCheckpoints = createTable("goal_checkpoints", {
   interval_start: timestamp("interval_start", {
     mode: "date",
     withTimezone: true,
-  }).notNull(),
+  }).notNull().default(sql`NOW()`),
   interval: integer("interval").notNull(),
   interval_amount: integer("interval_amount").notNull(),
 });

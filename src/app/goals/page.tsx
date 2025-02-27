@@ -1,13 +1,16 @@
-import { cookies } from "next/headers";
 import Meadow from "~/components/goals/meadow";
+import { getUserId } from "~/lib/get-user-id";
 import { getGoalsByUserId } from "~/server/queries/goals";
 
-export default async function Page() {
-  const cookieList = await cookies();
-  const userId = cookieList.get("selectedUserId")?.value;
-  const goals = await getGoalsByUserId(
-    userId ?? "c3b9cd23-1298-41a1-889c-8f7639aff150",
-  );
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}) {
+  const foreignUserId = await searchParams.then((params) => params["user_id"]);
+
+  const userId = await getUserId();
+  const goals = await getGoalsByUserId(foreignUserId ?? userId);
 
   return (
     <div className="h-full w-full items-center justify-center">
