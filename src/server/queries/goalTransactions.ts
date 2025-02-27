@@ -43,3 +43,4 @@ export async function removeFundFromGoal(goalId: string, amount: number) {
 
     return goalTransaction;
 }
+

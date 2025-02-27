@@ -125,6 +125,8 @@ export const goalCheckpoints = createTable("goal_checkpoints", {
   interval_amount: integer("interval_amount").notNull(),
 });
 
+export type GoalCheckpoint = typeof goalCheckpoints.$inferSelect;
+
 export const goalCheckpointRelations = relations(
   goalCheckpoints,
   ({ one }) => ({
@@ -273,6 +275,7 @@ export const goalTransactions = createTable("goal_transactions", {
     .references(() => goals.id),
   order_type: standingOrderType("order_type").notNull(),
   amount: integer("amount").notNull(),
+  created_at: timestamp("created_at", { withTimezone: true })
 });
 
 export const goalTransactionRelations = relations(
