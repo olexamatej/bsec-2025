@@ -288,6 +288,8 @@ export const goalTransactionRelations = relations(
   }),
 );
 
+export type GoalTransaction = typeof goalTransactions.$inferSelect;
+
 export const userBalanceView = pgView("user_balance").as((qb) => {
   const incomingUnion = qb
     .select({

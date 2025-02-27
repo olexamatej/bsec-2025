@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
@@ -10,6 +11,8 @@ import { GoalChart } from "~/app/goals/[id]/goal-chart";
 import { PlantVisualizer } from "~/components/goals/plant-visualizer";
 import Image from "next/image";
 import {
+  ArrowDown,
+  ArrowUp,
   BookOpenText,
   Calendar,
   CheckCircle,
@@ -22,6 +25,8 @@ import { Button } from "~/components/ui/button";
 import { AddFundsDialog } from "./add-funds-dialog";
 import { RemoveFundsDialog } from "./remove-funds-dialog";
 import { validateGoalCheckpointsWithDates } from "~/server/queries/goal_checkpoints";
+import { getAllGoalTransactions } from "~/server/queries/goalTransactions";
+import { formatDistanceToNow } from "date-fns";
 
 export default async function GoalDetailPage({
   params,
@@ -35,8 +40,8 @@ export default async function GoalDetailPage({
     return <div>Goal not found</div>;
   }
 
-  const out = await validateGoalCheckpointsWithDates(id);
-  console.log(out);
+  const transactions = await getAllGoalTransactions(id);
+  console.log(transactions);
 
   return (
     <div className="space-y-6">
@@ -104,6 +109,61 @@ export default async function GoalDetailPage({
           </CardContent>
         </Card>
       </div>
+      <Card className="flex flex-col md:col-span-1">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Funds</CardTitle>
+            <CardDescription>Your latest funds movement</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="flex-grow">
+          <div className="space-y-4">
+            {transactions
+              .sort((a, b) => Number(b.created_at) - Number(a.created_at))
+              .map((transaction) => (
+                <div
+                  key={transaction.id}
+                  className="flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-4">
+                    <div
+                      className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                        transaction.order_type === "incoming"
+                          ? "bg-green-600"
+                          : "bg-red-600"
+                      }`}
+                    >
+                      {transaction.order_type === "incoming" ? (
+                        <ArrowUp className="h-5 w-5 text-green-100" />
+                      ) : (
+                        <ArrowDown className="h-5 w-5 text-red-100" />
+                      )}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2"></div>
+                      <p className="text-xs text-muted-foreground">
+                        {formatDistanceToNow(transaction.created_at!, {
+                          addSuffix: true,
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className={`text-sm font-medium ${
+                      transaction.order_type === "incoming"
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {transaction.order_type === "incoming" ? "+" : "-"}$
+                    {transaction.amount.toFixed(2)}
+                  </div>
+                </div>
+              ))}
+          </div>
+        </CardContent>
+        <CardFooter className="mt-auto"></CardFooter>
+      </Card>
     </div>
   );
 }

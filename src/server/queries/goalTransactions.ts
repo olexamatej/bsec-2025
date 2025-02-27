@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db"
-import { goalTransactions, goals } from "../db/schema";
+import { type GoalTransaction, goalTransactions, goals } from "../db/schema";
 import { getGoalById } from "./goals"
 
 export async function addFundToGoal(goalId: string, amount: number) {
@@ -22,6 +22,7 @@ export async function addFundToGoal(goalId: string, amount: number) {
         goal_id: goalId,
         order_type: "incoming",
         amount,
+        created_at: new Date(),
     });
 
     return goalTransaction;
@@ -51,8 +52,15 @@ export async function removeFundFromGoal(goalId: string, amount: number) {
         goal_id: goalId,
         order_type: "outgoing",
         amount,
+        created_at: new Date(),
     });
 
     return goalTransaction;
 }
 
+
+export async function getAllGoalTransactions(goalId: string): Promise<GoalTransaction[]> {
+    return await db.query.goalTransactions.findMany({
+        where: eq(goalTransactions.goal_id, goalId),
+    });
+}

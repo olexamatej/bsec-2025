@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { type Goal, goalCheckpoints, goals } from "../db/schema";
+import { type Goal, goalCheckpoints, goals, goalTransactions } from "../db/schema";
 import { addFundToGoal } from "./goalTransactions";
 
 export const addGoal = async (
@@ -52,12 +52,34 @@ export const deleteGoal = async (id: string) => {
 };
 
 export const getGoalById = async (id: string) => {
-    return await db.query.goals.findFirst({
+    const out = await db.query.goals.findFirst({
         where: eq(goals.id, id),
         with: {
             checkpoints: true,
         },
     });
+
+    if (!out) {
+        return null;
+    }
+
+
+    const txs = await db.query.goalTransactions.findMany({
+        where: eq(goalTransactions.goal_id, id),
+    });
+
+    const incoming = txs
+        .filter((tx) => tx.order_type === "incoming")
+        .reduce((acc, tx) => acc + tx.amount, 0);
+    const outgoing = txs
+        .filter((tx) => tx.order_type === "outgoing")
+        .reduce((acc, tx) => acc + tx.amount, 0);
+
+    const paidTowardsGoal = incoming - outgoing;
+
+    out.amount = paidTowardsGoal;
+    return out;
+
 };
 
 export type GoalWithDeps = Awaited<ReturnType<typeof getGoalsByUserId>>[number];
