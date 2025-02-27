@@ -36,7 +36,7 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
     .reduce((sum, t) => sum + t.amount, 0);
 
   return (
-    <div className="container mx-auto max-w-7xl space-y-4 px-4">
+    <div className="container mx-auto max-w-7xl space-y-8 px-4">
       <div className="flex items-center gap-4">
         <Avatar className="h-16 w-16">
           <AvatarImage src={user.avatar_url || ""} alt={user.display_name} />
