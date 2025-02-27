@@ -13,6 +13,9 @@ export const getUserById = async (id: string) => {
   });
 };
 
+export type UserWithDeps = Awaited<ReturnType<typeof getUserById>>;
+
+
 export const getUsers = async () => {
   return await db.query.users.findMany();
 };

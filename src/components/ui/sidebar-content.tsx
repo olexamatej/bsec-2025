@@ -11,16 +11,20 @@ import {
   Target,
   ListOrdered,
   Settings,
-  User,
+  Rss,
 } from "lucide-react";
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   name?: string;
 }
 
+import { Montserrat } from "next/font/google";
+
+const montserrat = Montserrat({ subsets: ["latin"] });
+
 export function SidebarContent({
   className,
-  name = "John Doe",
+  name = "",
   ...props
 }: SidebarNavProps) {
   const pathname = usePathname();
@@ -51,6 +55,11 @@ export function SidebarContent({
       href: "/analytics",
       icon: <LineChart className="mr-2 h-4 w-4" />,
     },
+    {
+      title: "Feed",
+      href: "/feed",
+      icon: <Rss className="mr-2 h-4 w-4" />,
+    },
   ];
 
   const bottomNavItems = [
@@ -64,8 +73,10 @@ export function SidebarContent({
   return (
     <div className={cn("flex flex-1 flex-col", className)} {...props}>
       <div className="flex-1 space-y-6">
-        <div className="flex items-center py-2">
-          <h2 className="text-xl font-semibold">{name}</h2>
+        <div className="flex items-center px-3 py-2">
+          <h2 className={`${montserrat.className} text-center text-4xl`}>
+            {name}
+          </h2>
         </div>
 
         <nav className="space-y-1">

@@ -23,8 +23,12 @@ AVG
 ###
 
 - [x] dashboard
-- [] vytvaranie novych cielov
+- [x] vytvaranie novych cielov
 - [] leaderboard
-- [x] gamified stromceky ci co
-- [] socialna interakcia
+- [x] gamified stromceky ci co - chybaju checkpointy
+- [x] socialna interakcia - NAPOJIT!!
+- [] sharovanie transakcii
+- [] autoposting goalov
+- [] premenovat analytics na leaderboard
+
 - [] ai agent napojenie
