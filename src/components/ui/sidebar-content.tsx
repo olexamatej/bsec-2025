@@ -51,7 +51,7 @@ export function SidebarContent({
       icon: <Target className="mr-2 h-4 w-4" />,
     },
     {
-      title: "Analytics",
+      title: "Leaderboard",
       href: "/analytics",
       icon: <LineChart className="mr-2 h-4 w-4" />,
     },
