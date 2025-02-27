@@ -2,14 +2,11 @@ import { getTransactionsByUserId } from "~/server/queries/transactions";
 import { TransactionList } from "./_components/transaction_list";
 import { AddTransactionDialog } from "./_components/add-transaction-dialog";
 import { getTags } from "~/server/queries/tags";
-import { cookies } from "next/headers";
+import { getUserId } from "~/lib/get-user-id";
 
 export default async function TransactionsPage() {
-  const cookieList = await cookies();
-  const userId = cookieList.get("selectedUserId")?.value;
-  const transactions = await getTransactionsByUserId(
-    userId ?? "c3b9cd23-1298-41a1-889c-8f7639aff150",
-  );
+  const userId = await getUserId();
+  const transactions = await getTransactionsByUserId(userId);
   const tags = await getTags();
 
   return (

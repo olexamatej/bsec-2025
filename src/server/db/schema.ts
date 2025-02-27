@@ -60,7 +60,7 @@ export const comments = createTable("comments", {
     .notNull(),
 });
 
-export const commenRelations = relations(comments, ({ one }) => ({
+export const commentRelations = relations(comments, ({ one }) => ({
   user: one(users, {
     fields: [comments.user_id],
     references: [users.id],
@@ -88,9 +88,11 @@ export const goals = createTable("goals", {
   amount: integer("amount").notNull(),
   target: integer("target").notNull(),
   description: text("description").notNull().default(""),
-  target_date: timestamp("target_timestamp", { mode: "date", withTimezone: true }),
+  target_date: timestamp("target_timestamp", {
+    mode: "date",
+    withTimezone: true,
+  }),
 });
-
 
 export type Goal = typeof goals.$inferSelect;
 export type InsertGoal = typeof goals.$inferInsert;

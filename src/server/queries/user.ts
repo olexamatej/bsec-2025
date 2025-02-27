@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { users } from "../db/schema";
+import { type User, users } from "../db/schema";
 
 export const getUserById = async (id: string) => {
   return await db.query.users.findFirst({
@@ -13,6 +13,6 @@ export const getUserById = async (id: string) => {
   });
 };
 
-export const getUsers = async () => {
-  return await db.query.users.findMany();
-}
+export const getUsers = async (): Promise<User[]> => {
+  return db.query.users.findMany();
+};
