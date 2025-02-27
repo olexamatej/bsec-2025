@@ -84,8 +84,13 @@ export const goals = createTable("goals", {
   name: text("name").notNull(),
   amount: integer("amount").notNull(),
   target: integer("target").notNull(),
+  description: text("description").notNull().default(""),
   target_date: timestamp("timestamp", { mode: "date", withTimezone: true }),
 });
+
+
+export type Goal = typeof goals.$inferSelect;
+export type InsertGoal = typeof goals.$inferInsert;
 
 export const goalRelations = relations(goals, ({ one, many }) => ({
   user: one(users, {
