@@ -144,7 +144,8 @@ export const standingOrders = createTable("standing_orders", {
     mode: "date",
     withTimezone: true,
   }).notNull(),
-  interval: integer("interval_start").notNull(),
+  interval: integer("interval").notNull(),
+  description: text("description").notNull().default(""),
   interval_amount: integer("interval_amount").notNull(),
 
   order_type: standingOrderType("order_type").notNull(),

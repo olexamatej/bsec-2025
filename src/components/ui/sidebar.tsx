@@ -9,6 +9,7 @@ import {
   CreditCard,
   LineChart,
   Target,
+  ListOrdered,
   Settings,
   User,
 } from "lucide-react";
@@ -34,6 +35,11 @@ export function Sidebar({
       title: "Transactions",
       href: "/transactions",
       icon: <CreditCard className="mr-2 h-4 w-4" />,
+    },
+    {
+      title: "Standing orders",
+      href: "/orders",
+      icon: <ListOrdered className="mr-2 h-4 w-4" />,
     },
     {
       title: "Goals",
