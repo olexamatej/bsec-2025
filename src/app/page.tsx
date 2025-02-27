@@ -1,15 +1,11 @@
 // app/page.tsx
-import { cookies } from "next/headers";
 import { Dashboard } from "~/app/_components/dashboard";
+import { getUserId } from "~/lib/get-user-id";
 import { getUserById } from "~/server/queries/user";
 
 export default async function HomePage() {
-  const cookieList = await cookies();
-  const userId = cookieList.get("selectedUserId")?.value;
-
-  const user = await getUserById(
-    userId ?? "c3b9cd23-1298-41a1-889c-8f7639aff150",
-  );
+  const userId = await getUserId();
+  const user = await getUserById(userId);
   //TEMP FIX
   const balance = 1337.42;
 

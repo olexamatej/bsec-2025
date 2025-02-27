@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -19,11 +19,11 @@ const chartConfig = {
   },
   done: {
     label: "Done",
-    color: "hsl(var(--primary))",
+    color: "#D96426",
   },
   remaining: {
     label: "Remaining",
-    color: "hsl(var(--secondary))",
+    color: "#269BD9",
   },
 } satisfies ChartConfig;
 
@@ -53,15 +53,6 @@ export function GoalChart({ progress, total }: GoalChartProps) {
           nameKey="browser"
           innerRadius={60}
         >
-          <LabelList
-            dataKey="browser"
-            className="fill-black"
-            stroke="none"
-            fontSize={16}
-            formatter={(value: keyof typeof chartConfig) =>
-              chartData.find((d) => d.browser === value)?.visitors + " " + value
-            }
-          />
           <Label
             content={({ viewBox }) => {
               if (viewBox && "cx" in viewBox && "cy" in viewBox) {

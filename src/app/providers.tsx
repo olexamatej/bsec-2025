@@ -6,6 +6,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import type React from "react";
+import { UserProvider } from "./_components/user-provider";
 
 const queryClientConfig = {
   defaultOptions: {
@@ -29,8 +30,18 @@ const getQueryClient = () => {
   return clientQueryClientSingleton;
 };
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({
+  children,
+  userId,
+}: {
+  children: React.ReactNode;
+  userId: string;
+}) {
   const client = getQueryClient();
 
-  return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  return (
+    <UserProvider initialUserId={userId}>
+      <QueryClientProvider client={client}>{children}</QueryClientProvider>
+    </UserProvider>
+  );
 }
