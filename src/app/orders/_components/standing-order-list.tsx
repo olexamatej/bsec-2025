@@ -12,33 +12,37 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Trash2, Search, ArrowUpDown } from "lucide-react";
-import { TransactionWithDeps } from "~/server/queries/transactions";
+import { StandingOrderWithDeps } from "~/server/queries/standing-orders";
 import { useIsMounted } from "~/lib/use-is-mounted";
-import { deleteTransactionClient } from "~/lib/api/transactions";
+import { deleteStandingOrderClient } from "~/lib/api/standing-orders";
 import { Badge } from "~/components/ui/badge";
 
-export function TransactionList(data: { transactions: TransactionWithDeps[] }) {
+export function StandingOrderList(data: {
+  standingOrders: StandingOrderWithDeps[];
+}) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState<"date" | "amount">("date");
+  const [sortBy, setSortBy] = useState<"start" | "amount">("start");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const isMounted = useIsMounted();
 
-  // Filter transactions based on search term and type
-  const filteredTransactions = data.transactions.filter((transaction) => {
-    const matchesSearch = transaction.description
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+  // Filter standing orders based on search term and description
+  const filteredOrders = data.standingOrders.filter((order) => {
+    const matchesSearch =
+      order.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.description.toLowerCase().includes(searchTerm.toLowerCase());
 
     return matchesSearch;
   });
 
-  // Sort transactions
-  const sortedTransactions = [...filteredTransactions].sort((a, b) => {
-    if (sortBy === "date") {
+  // Sort standing orders
+  const sortedOrders = [...filteredOrders].sort((a, b) => {
+    if (sortBy === "start") {
       return sortOrder === "asc"
-        ? new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-        : new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+        ? new Date(a.interval_start).getTime() -
+            new Date(b.interval_start).getTime()
+        : new Date(b.interval_start).getTime() -
+            new Date(a.interval_start).getTime();
     } else {
       return sortOrder === "asc" ? a.amount - b.amount : b.amount - a.amount;
     }
@@ -55,7 +59,7 @@ export function TransactionList(data: { transactions: TransactionWithDeps[] }) {
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search transactions..."
+              placeholder="Search standing orders..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-8"
@@ -71,7 +75,7 @@ export function TransactionList(data: { transactions: TransactionWithDeps[] }) {
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="date">Date</SelectItem>
+                <SelectItem value="start">Start Date</SelectItem>
                 <SelectItem value="amount">Amount</SelectItem>
               </SelectContent>
             </Select>
@@ -82,56 +86,54 @@ export function TransactionList(data: { transactions: TransactionWithDeps[] }) {
           </div>
         </div>
 
-        {sortedTransactions.length === 0 ? (
-          <div className="py-12 text-center">
-            <p className="text-lg font-medium">No transactions found</p>
-            <p className="text-muted-foreground">
-              Try adjusting your search or filters
-            </p>
+        {sortedOrders.length === 0 ? (
+          <div className="text-center text-muted-foreground">
+            No standing orders found
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="grid grid-cols-[1fr_auto_auto_auto] gap-4 border-b pb-2 font-medium">
-              <div>Description</div>
-              <div>Category</div>
-              <div className="text-right">Amount</div>
-              <div className="text-right">Date</div>
-            </div>
-
-            {sortedTransactions.map((transaction) => (
+            {sortedOrders.map((order) => (
               <div
-                key={transaction.id}
-                className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-4 rounded-lg border p-3"
+                key={order.id}
+                className="flex items-center justify-between rounded-lg border p-4"
               >
-                <div className="font-medium">{transaction.description}</div>
-
-                <Badge
-                  variant={
-                    transaction.transaction_type === "incoming"
-                      ? "outline"
-                      : "destructive"
-                  }
-                >
-                  {transaction.tag?.name ?? "No tag"}
-                </Badge>
-
-                <div
-                  className={`text-right ${transaction.transaction_type === "incoming" ? "text-green-600" : "text-red-600"}`}
-                >
-                  {transaction.transaction_type === "incoming" ? "+" : "-"}$
-                  {transaction.amount.toFixed(2)}
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">
+                      {order.amount.toLocaleString()} €
+                    </span>
+                    <Badge
+                      variant={
+                        order.order_type === "incoming"
+                          ? "default"
+                          : "destructive"
+                      }
+                    >
+                      {order.order_type}
+                    </Badge>
+                    {order.tag && (
+                      <Badge variant="outline">{order.tag.name}</Badge>
+                    )}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {order.description}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Every {order.interval_amount}{" "}
+                    {order.interval === 1 ? "day" : "days"}
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-muted-foreground">
                     {isMounted
-                      ? transaction.timestamp.toLocaleDateString()
+                      ? `${new Date(order.interval_start).toLocaleDateString()} - ${new Date(order.interval_end).toLocaleDateString()}`
                       : ""}
                   </span>
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => deleteTransactionClient(transaction.id)}
+                    onClick={() => deleteStandingOrderClient(order.id)}
                   >
                     <Trash2 className="h-4 w-4" />
                     <span className="sr-only">Delete</span>

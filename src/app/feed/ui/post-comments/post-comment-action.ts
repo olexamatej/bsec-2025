@@ -1,15 +1,8 @@
 "use server";
 
-import { z } from "zod";
 import { db } from "~/server/db";
 import { comments } from "~/server/db/schema";
-
-const postCommentSchema = z.object({
-  postId: z.string(),
-  parentId: z.string().optional(),
-  userId: z.string(),
-  content: z.string(),
-});
+import { postCommentSchema } from "./post-comment-schema";
 
 export async function postCommentAction(formData: FormData) {
   const data = Object.fromEntries(formData.entries());

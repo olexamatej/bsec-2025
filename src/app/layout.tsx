@@ -1,7 +1,7 @@
 import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
-import { type Metadata } from "next";
 import { Sidebar } from "~/components/ui/sidebar";
+import { Providers } from "./providers";
 
 // export const metadata: Metadata = {
 //   title: "Create T3 App",
@@ -16,7 +16,9 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body className="flex h-screen">
         <Sidebar name="Matyas Turbokrejzac" />
-        <main className="flex-1 overflow-auto p-6">{children}</main>
+        <main className="flex-1 overflow-auto p-6">
+          <Providers>{children}</Providers>
+        </main>
       </body>
     </html>
   );

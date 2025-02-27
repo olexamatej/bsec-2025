@@ -147,9 +147,9 @@ export const standingOrders = createTable("standing_orders", {
     mode: "date",
     withTimezone: true,
   }).notNull(),
-  interval: integer("interval_start").notNull(),
+  interval: integer("interval").notNull(),
   interval_amount: integer("interval_amount").notNull(),
-
+  description: text("description").notNull().default(""),
   order_type: standingOrderType("order_type").notNull(),
 });
 
@@ -206,6 +206,8 @@ export const tags = createTable("tags", {
 
   name: text("name").notNull(),
 });
+
+export type Tag = typeof tags.$inferSelect;
 
 export const tagRelations = relations(tags, ({ many, one }) => ({
   user: one(users, {

@@ -35,7 +35,7 @@ export function Post({ post }: { post: Post }) {
         {post.transaction && <PostTransaction transaction={post.transaction} />}
       </CardContent>
       <CardFooter>
-        <PostComments />
+        <PostComments post={post} />
       </CardFooter>
     </Card>
   );
