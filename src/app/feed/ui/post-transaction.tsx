@@ -11,7 +11,7 @@ export function PostTransaction({
       <CardContent className="flex justify-between pt-6">
         <div className="flex flex-col space-y-1">
           <span>
-            {/* {transaction.user} */}
+            {transaction.user.display_name}{" "}
             {transaction.transaction_type === "incoming" ? "received" : "spent"}
           </span>
           <span className="text-4xl font-medium">{transaction.amount} Kč</span>
