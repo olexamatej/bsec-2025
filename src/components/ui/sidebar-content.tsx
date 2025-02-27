@@ -74,9 +74,11 @@ export function SidebarContent({
     <div className={cn("flex flex-1 flex-col", className)} {...props}>
       <div className="flex-1 space-y-6">
         <div className="flex items-center px-3 py-2">
-          <h2 className={`${montserrat.className} text-center text-4xl`}>
-            {name}
-          </h2>
+          <Link href="/" className="flex items-center space-x-2">
+            <h2 className={`${montserrat.className} text-center text-4xl`}>
+              {name}
+            </h2>
+          </Link>
         </div>
 
         <nav className="space-y-1">

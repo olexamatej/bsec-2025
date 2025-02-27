@@ -100,7 +100,7 @@ export function StandingOrderList(data: {
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="font-medium">
-                      {order.amount.toLocaleString()} €
+                      ${order.amount.toLocaleString()}
                     </span>
                     <Badge
                       variant={

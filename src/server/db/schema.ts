@@ -45,9 +45,11 @@ export const comments = createTable("comments", {
 
   post_id: uuid("post_id")
     .notNull()
-    .references(() => posts.id),
+    .references(() => posts.id, { onDelete: "cascade" }),
 
-  parent_id: uuid("parent_id").references((): AnyPgColumn => comments.id),
+  parent_id: uuid("parent_id").references((): AnyPgColumn => comments.id, {
+    onDelete: "cascade",
+  }),
 
   user_id: uuid("user_id")
     .notNull()
@@ -275,7 +277,7 @@ export const goalTransactions = createTable("goal_transactions", {
     .references(() => goals.id),
   order_type: standingOrderType("order_type").notNull(),
   amount: integer("amount").notNull(),
-  created_at: timestamp("created_at", { withTimezone: true })
+  created_at: timestamp("created_at", { withTimezone: true }),
 });
 
 export const goalTransactionRelations = relations(

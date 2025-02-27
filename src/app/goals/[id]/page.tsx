@@ -24,6 +24,7 @@ import {
 import { Button } from "~/components/ui/button";
 import { AddFundsDialog } from "./add-funds-dialog";
 import { RemoveFundsDialog } from "./remove-funds-dialog";
+import { ShareGoalDialog } from "./share-goal-dialog";
 import { validateGoalCheckpointsWithDates } from "~/server/queries/goal_checkpoints";
 import { getAllGoalTransactions } from "~/server/queries/goalTransactions";
 import { formatDistanceToNow } from "date-fns";
@@ -97,6 +98,14 @@ export default async function GoalDetailPage({
               </div>
             </div>
           </CardContent>
+          <CardFooter>
+            <div className="flex w-full justify-end">
+              <div className="space-x-2">
+                <ShareGoalDialog goal_id={id} />
+              </div>
+              {/* <Button className="ml-4">Add funds</Button> */}
+            </div>
+          </CardFooter>
         </Card>
         <Card className="md:col-span-1">
           <CardHeader>
