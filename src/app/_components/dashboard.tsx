@@ -26,7 +26,6 @@ interface DashboardProps {
 }
 export function Dashboard({ user, balance, tags }: DashboardProps) {
   // Calculate total incoming and outgoing for this month
-
   const incoming = user.transactions
     .filter((t) => t.transaction_type === "incoming")
     .reduce((sum, t) => sum + t.amount, 0);
@@ -36,76 +35,90 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
     .reduce((sum, t) => sum + t.amount, 0);
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-2">
-        <Avatar className="h-12 w-12">
+    <div className="container mx-auto max-w-7xl space-y-4 px-4">
+      <div className="flex items-center gap-4">
+        <Avatar className="h-16 w-16">
           <AvatarImage src={user.avatar_url || ""} alt={user.display_name} />
           <AvatarFallback>
             {user.display_name.slice(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <div>
-          <h1 className="text-2xl font-bold">Welcome, {user.display_name}</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold">Welcome, {user.display_name}</h1>
+          <p className="text-lg text-muted-foreground">
             Here's your financial overview
           </p>
         </div>
       </div>
 
       {/* Balance Overview */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
-            <CardTitle className="text-sm font-medium">
+      <div className="grid gap-6 md:grid-cols-3 lg:gap-8">
+        <Card className="shadow-md transition-all hover:shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-base font-medium lg:text-lg">
               Current Balance
             </CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <DollarSign className="h-5 w-5 text-muted-foreground lg:h-6 lg:w-6" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${balance.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-3xl font-bold lg:text-4xl">
+              ${balance.toFixed(2)}
+            </div>
+            <p className="text-sm text-muted-foreground">
               Your available funds
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
-            <CardTitle className="text-sm font-medium">Income</CardTitle>
-            <ArrowUp className="h-4 w-4 text-green-500" />
+        <Card className="shadow-md transition-all hover:shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-base font-medium lg:text-lg">
+              Income
+            </CardTitle>
+            <ArrowUp className="h-5 w-5 text-green-500 lg:h-6 lg:w-6" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${incoming.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">This month</p>
+            <div className="text-3xl font-bold lg:text-4xl">
+              ${incoming.toFixed(2)}
+            </div>
+            <p className="text-sm text-muted-foreground">This month</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
-            <CardTitle className="text-sm font-medium">Expenses</CardTitle>
-            <ArrowDown className="h-4 w-4 text-red-500" />
+        <Card className="shadow-md transition-all hover:shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-base font-medium lg:text-lg">
+              Expenses
+            </CardTitle>
+            <ArrowDown className="h-5 w-5 text-red-500 lg:h-6 lg:w-6" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${outgoing.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">This month</p>
+            <div className="text-3xl font-bold lg:text-4xl">
+              ${outgoing.toFixed(2)}
+            </div>
+            <p className="text-sm text-muted-foreground">This month</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Transactions and Goals */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2 lg:gap-8 xl:grid-cols-2">
         {/* Recent Transactions */}
-        <Card className="flex flex-col md:col-span-1">
+        <Card className="flex flex-col shadow-md transition-all hover:shadow-lg">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Recent Transactions</CardTitle>
-              <CardDescription>Your latest financial activity</CardDescription>
+              <CardTitle className="text-xl lg:text-2xl">
+                Recent Transactions
+              </CardTitle>
+              <CardDescription className="text-sm lg:text-base">
+                Your latest financial activity
+              </CardDescription>
             </div>
             <AddTransactionDialog tags={tags} />
           </CardHeader>
 
           <CardContent className="flex-grow">
-            <div className="space-y-4">
+            <div className="space-y-6">
               {user.transactions
                 .slice()
                 .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
@@ -113,38 +126,55 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
                 .map((transaction) => (
                   <div
                     key={transaction.id}
-                    className="flex items-center justify-between"
+                    className="flex items-center justify-between rounded-lg p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
                   >
                     <div className="flex items-center gap-4">
                       <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                        className={`flex h-12 w-12 items-center justify-center rounded-full ${
                           transaction.transaction_type === "incoming"
                             ? "bg-green-600"
                             : "bg-red-600"
                         }`}
                       >
                         {transaction.transaction_type === "incoming" ? (
-                          <ArrowUp className="h-5 w-5 text-green-100" />
+                          <ArrowUp className="h-6 w-6 text-green-100" />
                         ) : (
-                          <ArrowDown className="h-5 w-5 text-red-100" />
+                          <ArrowDown className="h-6 w-6 text-red-100" />
                         )}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-medium">
+                          <p className="text-base font-medium lg:text-lg">
                             {transaction.description}
                           </p>
                           {transaction.tag_id && (
-                            <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
-                              {
-                                tags.find(
-                                  (tag) => tag.id === transaction.tag_id,
-                                )?.name
-                              }
+                            <span
+                              className="rounded-xl border px-2 py-1 text-sm"
+                              style={{
+                                color: `#${
+                                  tags.find(
+                                    (tag) => tag.id === transaction.tag_id,
+                                  )?.color || "defaultColor"
+                                }`,
+                                backgroundColor: `#${
+                                  tags.find(
+                                    (tag) => tag.id === transaction.tag_id,
+                                  )?.color || "defaultColor"
+                                }20`,
+                                borderColor: `#${
+                                  tags.find(
+                                    (tag) => tag.id === transaction.tag_id,
+                                  )?.color || "defaultColor"
+                                }`,
+                              }}
+                            >
+                              #{" "}
+                              {tags.find((tag) => tag.id === transaction.tag_id)
+                                ?.name || "No tag"}
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                           {formatDistanceToNow(transaction.timestamp, {
                             addSuffix: true,
                           })}
@@ -152,7 +182,7 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
                       </div>
                     </div>
                     <div
-                      className={`text-sm font-medium ${
+                      className={`text-lg font-medium ${
                         transaction.transaction_type === "incoming"
                           ? "text-green-600"
                           : "text-red-600"
@@ -165,23 +195,27 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
                 ))}
             </div>
           </CardContent>
-          <CardFooter className="mt-auto">
-            <Button className="w-full">
+          <CardFooter className="mt-auto p-4">
+            <Button className="w-full py-2 text-base">
               <a href="/transactions">View all transactions</a>
             </Button>
           </CardFooter>
         </Card>
         {/* Financial Goals */}
-        <Card className="flex flex-col md:col-span-1">
+        <Card className="flex flex-col shadow-md transition-all hover:shadow-lg">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Nearest Financial Goals</CardTitle>
-              <CardDescription>Track your savings progress</CardDescription>
+              <CardTitle className="text-xl lg:text-2xl">
+                Nearest Financial Goals
+              </CardTitle>
+              <CardDescription className="text-sm lg:text-base">
+                Track your savings progress
+              </CardDescription>
             </div>
             <AddGoalDialog />
           </CardHeader>
           <CardContent className="flex-grow">
-            <div className="space-y-4">
+            <div className="space-y-6">
               {user.goals
                 .slice()
                 .filter((goal) => goal.target_date) // Filter out goals without dates
@@ -196,17 +230,22 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
                   );
                   return diffA - diffB;
                 })
-                .slice(0, 4) // Take only the first 5 after sorting
+                .slice(0, 4) // Take only the first 4 after sorting
                 .map((goal) => {
                   const progressPercentage = Math.round(
                     (goal.amount / goal.target) * 100,
                   );
                   return (
-                    <div key={goal.id} className="space-y-2">
+                    <div
+                      key={goal.id}
+                      className="space-y-3 rounded-lg p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
+                    >
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm font-medium">{goal.name}</p>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-base font-medium lg:text-lg">
+                            {goal.name}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
                             Due{" "}
                             {goal.target_date
                               ? goal.target_date.toDateString()
@@ -217,18 +256,19 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
                           variant={
                             progressPercentage > 50 ? "default" : "outline"
                           }
+                          className="px-3 py-1 text-sm font-medium"
                         >
                           ${goal.amount} / ${goal.target}
                         </Badge>
                       </div>
-                      <Progress value={progressPercentage} className="h-2" />
+                      <Progress value={progressPercentage} className="h-3" />
                     </div>
                   );
                 })}
             </div>
           </CardContent>
-          <CardFooter className="mt-auto space-x-2 p-2">
-            <Button className="mb-4 w-full px-2">
+          <CardFooter className="mt-auto p-4">
+            <Button className="w-full py-2 text-base">
               <a href="/goals">View all goals</a>
             </Button>
           </CardFooter>

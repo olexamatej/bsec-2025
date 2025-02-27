@@ -150,15 +150,18 @@ export function TransactionList(data: { transactions: TransactionWithDeps[] }) {
               >
                 <div className="font-medium">{transaction.description}</div>
 
-                <Badge
-                  variant={
-                    transaction.transaction_type === "incoming"
-                      ? "outline"
-                      : "destructive"
-                  }
-                >
-                  {transaction.tag?.name ?? "No tag"}
-                </Badge>
+                {transaction.tag && (
+                  <span
+                    className="rounded-xl border px-2 py-1 text-sm"
+                    style={{
+                      color: `#${transaction.tag.color}`,
+                      backgroundColor: `#${transaction.tag.color}20`,
+                      borderColor: `#${transaction.tag.color}`,
+                    }}
+                  >
+                    # {transaction.tag.name}
+                  </span>
+                )}
 
                 <div
                   className={`text-right ${transaction.transaction_type === "incoming" ? "text-green-600" : "text-red-600"}`}
