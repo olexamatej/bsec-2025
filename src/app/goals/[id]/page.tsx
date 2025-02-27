@@ -50,7 +50,7 @@ export default async function GoalDetailPage({
             <CardDescription>Target {goal.target}</CardDescription>
           </CardHeader>
           <CardContent>
-            <GoalChart progress={275} total={475} />
+            <GoalChart progress={goal.amount} total={goal.target} />
           </CardContent>
         </Card>
       </div>

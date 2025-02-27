@@ -4,10 +4,13 @@ import { getTags } from "~/server/queries/tags";
 import { TransactionList } from "~/app/transactions/_components/transaction_list";
 import { StandingOrderList } from "./_components/standing-order-list";
 import { AddStandingOrderDialog } from "./_components/add-standing-order-dialog";
+import { cookies } from "next/headers";
 
 export default async function OrdersPage() {
+  const cookieList = await cookies();
+  const userId = cookieList.get("selectedUserId")?.value;
   const standingOrders = await getStandingOrdersByUserId(
-    "c3b9cd23-1298-41a1-889c-8f7639aff150",
+    userId ?? "c3b9cd23-1298-41a1-889c-8f7639aff150",
   );
   const tags = await getTags();
 
