@@ -41,7 +41,10 @@ export function AddStandingOrderDialog({ tags }: { tags: Tag[] }) {
 
     try {
       await addStandingOrderClient(
-        "c3b9cd23-1298-41a1-889c-8f7639aff150",
+        document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("selectedUserId="))
+          ?.split("=")[1] ?? "c3b9cd23-1298-41a1-889c-8f7639aff150",
         parseInt(amount),
         tagId,
         new Date(startDate),

@@ -43,7 +43,11 @@ export function AddTransactionDialog({ tags }: { tags: Tag[] }) {
       const response = await addTransactionClient({
         amount: parseFloat(amount),
         timestamp: new Date(),
-        user_id: "c3b9cd23-1298-41a1-889c-8f7639aff150",
+        user_id:
+          document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("selectedUserId="))
+            ?.split("=")[1] ?? "c3b9cd23-1298-41a1-889c-8f7639aff150",
         transaction_type: transactionType as "incoming" | "outgoing",
         description: description,
         id: "",

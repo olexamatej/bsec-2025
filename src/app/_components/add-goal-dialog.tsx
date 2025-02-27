@@ -30,7 +30,11 @@ export function AddGoalDialog() {
     try {
       const response = await addGoalClient({
         amount: parseFloat(amount),
-        user_id: "c3b9cd23-1298-41a1-889c-8f7639aff150", // This should ideally come from auth context
+        user_id:
+          document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("selectedUserId="))
+            ?.split("=")[1] ?? "c3b9cd23-1298-41a1-889c-8f7639aff150",
         name: goalName,
         target: parseFloat(target),
         target_date: targetDate ? new Date(targetDate) : undefined,
