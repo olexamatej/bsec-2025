@@ -13,9 +13,12 @@ prepocitanie penazi na nejake body, nech to je relativne
 prepojenie so socialnou sietou?
 moznost socialne interakcie?
 
+PRIDANIE PENAZI DO NAHODNEHO CIELU
+(duolingo) STREAK !! ak clovek pravidelne setri
+
 ###
 
-- [] dashboard
+- [x] dashboard
 - [] vytvaranie novych cielov
 - [] leaderboard
 - [] gamified stromceky ci co
