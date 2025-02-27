@@ -32,3 +32,5 @@ AVG
 - [] premenovat analytics na leaderboard
 
 - [] ai agent napojenie
+
+- [] ADD FUNDS NEFUNGUJE PRI KVETOCH XD
