@@ -8,6 +8,7 @@ export const getUserById = async (id: string) => {
     with: {
       transactions: true,
       goals: true,
+      tags: true,
     },
   });
 };

@@ -15,10 +15,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body className="flex h-screen">
-        <Sidebar name="Matyas Turbokrejzac" />
-        <main className="flex-1 overflow-auto p-6">
-          <Providers>{children}</Providers>
-        </main>
+        <Sidebar name="FinLexa" />
+        <main className="flex-1 overflow-auto p-6">{children}</main>
       </body>
     </html>
   );

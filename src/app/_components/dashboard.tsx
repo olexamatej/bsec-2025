@@ -5,6 +5,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -14,14 +15,16 @@ import { ArrowDown, ArrowUp, DollarSign } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { getUserById } from "~/server/queries/user";
 import { AddGoalDialog } from "~/app/_components/add-goal-dialog"; // adjust the path as needed
-import Link from "next/link";
+import { AddTransactionDialog } from "~/app/transactions/_components/add-transaction-dialog";
+
+import { getTags } from "~/server/queries/tags";
 
 interface DashboardProps {
   user: NonNullable<Awaited<ReturnType<typeof getUserById>>>;
   balance: number;
+  tags: Awaited<ReturnType<typeof getTags>>;
 }
-
-export function Dashboard({ user, balance }: DashboardProps) {
+export function Dashboard({ user, balance, tags }: DashboardProps) {
   // Calculate total incoming and outgoing for this month
 
   const incoming = user.transactions
@@ -33,8 +36,8 @@ export function Dashboard({ user, balance }: DashboardProps) {
     .reduce((sum, t) => sum + t.amount, 0);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
+    <div className="space-y-3">
+      <div className="flex items-center gap-2">
         <Avatar className="h-12 w-12">
           <AvatarImage src={user.avatar_url || ""} alt={user.display_name} />
           <AvatarFallback>
@@ -52,7 +55,7 @@ export function Dashboard({ user, balance }: DashboardProps) {
       {/* Balance Overview */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
             <CardTitle className="text-sm font-medium">
               Current Balance
             </CardTitle>
@@ -67,7 +70,7 @@ export function Dashboard({ user, balance }: DashboardProps) {
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
             <CardTitle className="text-sm font-medium">Income</CardTitle>
             <ArrowUp className="h-4 w-4 text-green-500" />
           </CardHeader>
@@ -78,7 +81,7 @@ export function Dashboard({ user, balance }: DashboardProps) {
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
             <CardTitle className="text-sm font-medium">Expenses</CardTitle>
             <ArrowDown className="h-4 w-4 text-red-500" />
           </CardHeader>
@@ -92,77 +95,114 @@ export function Dashboard({ user, balance }: DashboardProps) {
       {/* Transactions and Goals */}
       <div className="grid gap-4 md:grid-cols-2">
         {/* Recent Transactions */}
-        <Card className="md:col-span-1">
-          <CardHeader>
-            <CardTitle>Recent Transactions</CardTitle>
-            <CardDescription>Your latest financial activity</CardDescription>
+        <Card className="flex flex-col md:col-span-1">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Recent Transactions</CardTitle>
+              <CardDescription>Your latest financial activity</CardDescription>
+            </div>
+            <AddTransactionDialog tags={tags} />
           </CardHeader>
-          <CardContent>
+
+          <CardContent className="flex-grow">
             <div className="space-y-4">
-              {user.transactions.slice(0, 5).map((transaction) => (
-                <div
-                  key={transaction.id}
-                  className="flex items-center justify-between"
-                >
-                  <div className="flex items-center gap-4">
+              {user.transactions
+                .slice()
+                .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
+                .slice(0, 5)
+                .map((transaction) => (
+                  <div
+                    key={transaction.id}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                          transaction.transaction_type === "incoming"
+                            ? "bg-green-600"
+                            : "bg-red-600"
+                        }`}
+                      >
+                        {transaction.transaction_type === "incoming" ? (
+                          <ArrowUp className="h-5 w-5 text-green-100" />
+                        ) : (
+                          <ArrowDown className="h-5 w-5 text-red-100" />
+                        )}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium">
+                            {transaction.description}
+                          </p>
+                          {transaction.tag_id && (
+                            <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
+                              {
+                                tags.find(
+                                  (tag) => tag.id === transaction.tag_id,
+                                )?.name
+                              }
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {formatDistanceToNow(transaction.timestamp, {
+                            addSuffix: true,
+                          })}
+                        </p>
+                      </div>
+                    </div>
                     <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                      className={`text-sm font-medium ${
                         transaction.transaction_type === "incoming"
-                          ? "bg-green-100"
-                          : "bg-red-100"
+                          ? "text-green-600"
+                          : "text-red-600"
                       }`}
                     >
-                      {transaction.transaction_type === "incoming" ? (
-                        <ArrowUp className="h-5 w-5 text-green-600" />
-                      ) : (
-                        <ArrowDown className="h-5 w-5 text-red-600" />
-                      )}
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">
-                        {transaction.description}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {formatDistanceToNow(transaction.timestamp, {
-                          addSuffix: true,
-                        })}
-                      </p>
+                      {transaction.transaction_type === "incoming" ? "+" : "-"}$
+                      {transaction.amount.toFixed(2)}
                     </div>
                   </div>
-                  <div
-                    className={`text-sm font-medium ${
-                      transaction.transaction_type === "incoming"
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
-                  >
-                    {transaction.transaction_type === "incoming" ? "+" : "-"}$
-                    {transaction.amount.toFixed(2)}
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
-            <Button variant="outline" className="mt-4 w-full">
-              View All Transactions
-            </Button>
           </CardContent>
+          <CardFooter className="mt-auto">
+            <Button className="w-full">
+              <a href="/transactions">View all transactions</a>
+            </Button>
+          </CardFooter>
         </Card>
-
         {/* Financial Goals */}
-        <Card className="md:col-span-1">
-          <CardHeader>
-            <CardTitle>Financial Goals</CardTitle>
-            <CardDescription>Track your savings progress</CardDescription>
+        <Card className="flex flex-col md:col-span-1">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Nearest Financial Goals</CardTitle>
+              <CardDescription>Track your savings progress</CardDescription>
+            </div>
+            <AddGoalDialog />
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-grow">
             <div className="space-y-4">
-              {user.goals.map((goal) => {
-                const progressPercentage = Math.round(
-                  (goal.amount / goal.target) * 100,
-                );
-                return (
-                  <Link href={`/goals/${goal.id}`} passHref key={goal.id}>
-                    <div className="space-y-2">
+              {user.goals
+                .slice()
+                .filter((goal) => goal.target_date) // Filter out goals without dates
+                .sort((a, b) => {
+                  // Sort by how close the target date is to today
+                  const today = new Date();
+                  const diffA = Math.abs(
+                    new Date(a.target_date ?? 0).getTime() - today.getTime(),
+                  );
+                  const diffB = Math.abs(
+                    new Date(b.target_date ?? 0).getTime() - today.getTime(),
+                  );
+                  return diffA - diffB;
+                })
+                .slice(0, 4) // Take only the first 5 after sorting
+                .map((goal) => {
+                  const progressPercentage = Math.round(
+                    (goal.amount / goal.target) * 100,
+                  );
+                  return (
+                    <div key={goal.id} className="space-y-2">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm font-medium">{goal.name}</p>
@@ -183,12 +223,15 @@ export function Dashboard({ user, balance }: DashboardProps) {
                       </div>
                       <Progress value={progressPercentage} className="h-2" />
                     </div>
-                  </Link>
-                );
-              })}
+                  );
+                })}
             </div>
-            <AddGoalDialog />
           </CardContent>
+          <CardFooter className="mt-auto">
+            <Button className="w-full">
+              <a href="/goals">View all goals</a>
+            </Button>
+          </CardFooter>
         </Card>
       </div>
     </div>
