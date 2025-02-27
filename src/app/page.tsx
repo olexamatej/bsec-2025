@@ -11,5 +11,5 @@ export default async function HomePage() {
     return <div>Error: User not found</div>;
   }
 
-  return <Dashboard user={user} balance={balance} />;
+  return <Dashboard user={user} balance={balance} tags={user.tags} />;
 }
