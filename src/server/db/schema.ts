@@ -204,6 +204,8 @@ export const tags = createTable("tags", {
   name: text("name").notNull(),
 });
 
+export type Tag = typeof tags.$inferSelect;
+
 export const tagRelations = relations(tags, ({ many, one }) => ({
   user: one(users, {
     fields: [tags.user_id],

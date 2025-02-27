@@ -12,11 +12,12 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Trash2, Search, ArrowUpDown } from "lucide-react";
-import { Transaction } from "~/server/db/schema";
+import { TransactionWithDeps } from "~/server/queries/transactions";
 import { useIsMounted } from "~/lib/use-is-mounted";
 import { deleteTransactionClient } from "~/lib/api/transactions";
+import { Badge } from "~/components/ui/badge";
 
-export function TransactionList(transactions: { transactions: Transaction[] }) {
+export function TransactionList(data: { transactions: TransactionWithDeps[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "amount">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -24,16 +25,14 @@ export function TransactionList(transactions: { transactions: Transaction[] }) {
   const isMounted = useIsMounted();
 
   // Filter transactions based on search term and type
-  const filteredTransactions = transactions.transactions.filter(
-    (transaction) => {
-      const matchesSearch = transaction.amount
-        .toString()
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+  const filteredTransactions = data.transactions.filter((transaction) => {
+    const matchesSearch = transaction.amount
+      .toString()
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
 
-      return matchesSearch;
-    },
-  );
+    return matchesSearch;
+  });
 
   // Sort transactions
   const sortedTransactions = [...filteredTransactions].sort((a, b) => {
@@ -107,8 +106,21 @@ export function TransactionList(transactions: { transactions: Transaction[] }) {
               >
                 <div className="font-medium">{transaction.description}</div>
 
-                <div className={"text-right text-green-600"}>
-                  {"+"}${transaction.amount.toFixed(2)}
+                <Badge
+                  variant={
+                    transaction.transaction_type === "incoming"
+                      ? "outline"
+                      : "destructive"
+                  }
+                >
+                  {transaction.tag?.name ?? "No tag"}
+                </Badge>
+
+                <div
+                  className={`text-right ${transaction.transaction_type === "incoming" ? "text-green-600" : "text-red-600"}`}
+                >
+                  {transaction.transaction_type === "incoming" ? "+" : "-"}$
+                  {transaction.amount.toFixed(2)}
                 </div>
 
                 <div className="flex items-center gap-2">
