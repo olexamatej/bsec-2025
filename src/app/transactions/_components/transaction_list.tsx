@@ -25,7 +25,8 @@ export function TransactionList(transactions: { transactions: Transaction[] }) {
   // Filter transactions based on search term and type
   const filteredTransactions = transactions.transactions.filter(
     (transaction) => {
-      const matchesSearch = transaction.description
+      const matchesSearch = transaction.amount
+        .toString()
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
 
@@ -37,8 +38,8 @@ export function TransactionList(transactions: { transactions: Transaction[] }) {
   const sortedTransactions = [...filteredTransactions].sort((a, b) => {
     if (sortBy === "date") {
       return sortOrder === "asc"
-        ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        ? new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+        : new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
     } else {
       return sortOrder === "asc" ? a.amount - b.amount : b.amount - a.amount;
     }
@@ -103,7 +104,7 @@ export function TransactionList(transactions: { transactions: Transaction[] }) {
                 key={transaction.id}
                 className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-4 rounded-lg border p-3"
               >
-                <div className="font-medium">{transaction.description}</div>
+                <div className="font-medium">{transaction.id}</div>
 
                 <div className={"text-right text-green-600"}>
                   {"+"}${transaction.amount.toFixed(2)}
@@ -112,7 +113,7 @@ export function TransactionList(transactions: { transactions: Transaction[] }) {
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-muted-foreground">
                     {isMounted
-                      ? transaction.createdAt.toLocaleDateString()
+                      ? transaction.timestamp.toLocaleDateString()
                       : ""}
                   </span>
                   <Button

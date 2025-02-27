@@ -1,10 +1,10 @@
-import { getTransactionsByAccountId } from "~/server/queries/transactions";
+import { getTransactionsByUserId } from "~/server/queries/transactions";
 
 export async function GET(request: Request) {
     const url = new URL(request.url);
-    const id = url.searchParams.get("account_id");
+    const id = url.searchParams.get("user_id");
 
-    const transactions = await getTransactionsByAccountId(+(id || 1));
+    const transactions = await getTransactionsByUserId(id ?? '');
 
     return new Response(JSON.stringify(transactions), {
         headers: {

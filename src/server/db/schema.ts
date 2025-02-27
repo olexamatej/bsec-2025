@@ -28,6 +28,8 @@ export const users = createTable("users", {
   avatar_url: text("avatar_url"),
 });
 
+export type User = typeof users.$inferSelect;
+
 export const userRelations = relations(users, ({ many }) => ({
   comments: many(comments),
   goals: many(goals),
@@ -167,6 +169,9 @@ export const transactions = createTable("transactions", {
 
   transaction_type: standingOrderType("transaction_type").notNull(),
 });
+
+export type Transaction = typeof transactions.$inferSelect;
+
 
 export const transactionRelations = relations(transactions, ({ one }) => ({
   user: one(users, {

@@ -1,8 +1,8 @@
-import { getTransactionsByAccountId } from "~/server/queries/transactions";
+import { getTransactionsByUserId } from "~/server/queries/transactions";
 import { TransactionList } from "./_components/transaction_list";
 
 export default async function TransactionsPage() {
-  const transactions = await getTransactionsByAccountId(1);
+  const transactions = await getTransactionsByUserId("");
 
   return (
     <div className="min-h-screen bg-gray-50">
