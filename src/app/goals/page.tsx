@@ -14,7 +14,7 @@ export default async function Page({
 
   return (
     <div className="h-full w-full items-center justify-center">
-      <Meadow flowers={goals} />
+      <Meadow flowers={goals} key={foreignUserId ?? userId} />
     </div>
   );
 }
