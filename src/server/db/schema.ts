@@ -88,7 +88,7 @@ export const goals = createTable("goals", {
   amount: integer("amount").notNull(),
   target: integer("target").notNull(),
   description: text("description").notNull().default(""),
-  target_date: timestamp("timestamp", { mode: "date", withTimezone: true }),
+  target_date: timestamp("target_timestamp", { mode: "date", withTimezone: true }),
 });
 
 
@@ -114,7 +114,7 @@ export const goalCheckpoints = createTable("goal_checkpoints", {
     mode: "date",
     withTimezone: true,
   }).notNull(),
-  interval: integer("interval_start").notNull(),
+  interval: integer("interval").notNull(),
   interval_amount: integer("interval_amount").notNull(),
 });
 
