@@ -13,37 +13,45 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Plus } from "lucide-react";
-import { addTransactionClient } from "~/lib/api/transactions";
+import { addGoalClient } from "~/lib/api/goals";
 
 export function AddGoalDialog() {
+  const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState("");
-  const [goal, setGoal] = useState("");
+  const [goalName, setGoalName] = useState("");
+  const [target, setTarget] = useState("");
+  const [targetDate, setTargetDate] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     try {
-      const response = await addTransactionClient({
+      const response = await addGoalClient({
         amount: parseFloat(amount),
-        timestamp: new Date(),
-        user_id: "c3b9cd23-1298-41a1-889c-8f7639aff150",
-        transaction_type: "outgoing",
-        description: "Transakce",
-        id: "",
-        tag_id: null,
+        user_id: "c3b9cd23-1298-41a1-889c-8f7639aff150", // This should ideally come from auth context
+        name: goalName,
+        target: parseFloat(target),
+        target_date: targetDate ? new Date(targetDate) : undefined,
       });
 
       // Reset form and close dialog
       setAmount("");
-      setGoal("");
+      setGoalName("");
+      setTarget("");
+      setTargetDate("");
+      setOpen(false);
       window.location.reload();
     } catch (error) {
       console.error("Error adding goal:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
           <Plus className="mr-2 h-4 w-4" />
@@ -56,6 +64,21 @@ export function AddGoalDialog() {
           <DialogDescription>Add a new goal to your account.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <label
+              htmlFor="goalName"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Goal Name
+            </label>
+            <Input
+              id="goalName"
+              placeholder="Enter goal name"
+              value={goalName}
+              onChange={(e) => setGoalName(e.target.value)}
+              required
+            />
+          </div>
           <div className="space-y-2">
             <label
               htmlFor="amount"
@@ -75,20 +98,39 @@ export function AddGoalDialog() {
           </div>
           <div className="space-y-2">
             <label
-              htmlFor="goal"
+              htmlFor="target"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Goal
+              Target
             </label>
             <Input
-              id="goal"
-              placeholder="Enter goal ID"
-              value={goal}
-              onChange={(e) => setGoal(e.target.value)}
+              id="target"
+              type="number"
+              step="0.01"
+              placeholder="Enter target amount"
+              value={target}
+              onChange={(e) => setTarget(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <label
+              htmlFor="targetDate"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Target Date (Optional)
+            </label>
+            <Input
+              id="targetDate"
+              type="date"
+              value={targetDate}
+              onChange={(e) => setTargetDate(e.target.value)}
             />
           </div>
           <DialogFooter>
-            <Button type="submit">Add Goal</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Adding..." : "Add Goal"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
