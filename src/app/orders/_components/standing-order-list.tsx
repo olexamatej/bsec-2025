@@ -26,12 +26,14 @@ export function StandingOrderList(data: {
 
   const isMounted = useIsMounted();
 
-  // Filter standing orders based on search term
+  // Filter standing orders based on search term and description
   const filteredOrders = data.standingOrders.filter((order) => {
-    const matchesSearch = order.amount
-      .toString()
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+    const matchesSearch =
+      order.amount
+        .toString()
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      order.description.toLowerCase().includes(searchTerm.toLowerCase());
 
     return matchesSearch;
   });
@@ -115,6 +117,9 @@ export function StandingOrderList(data: {
                     {order.tag && (
                       <Badge variant="outline">{order.tag.name}</Badge>
                     )}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {order.description}
                   </div>
                   <div className="text-sm text-muted-foreground">
                     Every {order.interval_amount}{" "}
