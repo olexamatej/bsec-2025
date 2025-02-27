@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { type Goal } from "~/server/db/schema";
 import { Card, CardContent } from "~/components/ui/card";
 import { PlantVisualizerHover } from "./plant-visualizer-hover";
-import { UserWithDeps } from "~/server/queries/user";
+import { type UserWithDeps } from "~/server/queries/user";
 
 type Position = {
   top: string;
@@ -29,15 +29,15 @@ export default function Meadow({
   };
 
   useEffect(() => {
-    flowers.push({
-      name: "test",
-      description: "test",
-      id: "plus_sign",
-      user_id: "test",
-      target: 0,
-      amount: 0,
-      target_date: new Date(),
-    });
+    // flowers.push({
+    //   name: "test",
+    //   description: "test",
+    //   id: "plus_sign",
+    //   user_id: "test",
+    //   target: 0,
+    //   amount: 0,
+    //   target_date: new Date(),
+    // });
 
     const generatePositions = () => {
       const newPositions: Array<Position> = [];
