@@ -29,10 +29,7 @@ export function StandingOrderList(data: {
   // Filter standing orders based on search term and description
   const filteredOrders = data.standingOrders.filter((order) => {
     const matchesSearch =
-      order.amount
-        .toString()
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
+      order.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.description.toLowerCase().includes(searchTerm.toLowerCase());
 
     return matchesSearch;

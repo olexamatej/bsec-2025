@@ -26,8 +26,7 @@ export function TransactionList(data: { transactions: TransactionWithDeps[] }) {
 
   // Filter transactions based on search term and type
   const filteredTransactions = data.transactions.filter((transaction) => {
-    const matchesSearch = transaction.amount
-      .toString()
+    const matchesSearch = transaction.description
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
