@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PlantVisualizer } from "./plant-visualizer";
 import { type Goal } from "~/server/db/schema";
+import { PlantVisualizerHover } from "./plant-visualizer-hover";
 
 type Position = {
   top: string;
@@ -49,7 +49,7 @@ export default function Meadow({ flowers }: { flowers: Array<Goal> }) {
   return (
     <div className="relative h-full w-full rounded-lg bg-green-300">
       {flowers.map((flower, index) => (
-        <PlantVisualizer
+        <PlantVisualizerHover
           goal={flower}
           key={index}
           show_name={true}
