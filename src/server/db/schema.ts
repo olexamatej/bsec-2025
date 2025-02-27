@@ -41,6 +41,8 @@ export const userRelations = relations(users, ({ many }) => ({
 export const comments = createTable("comments", {
   id: uuid("id").primaryKey().defaultRandom(),
 
+  post_id: uuid("post_id").references(() => posts.id),
+
   parent_id: uuid("parent_id").references((): AnyPgColumn => comments.id),
 
   user_id: uuid("user_id")
@@ -63,6 +65,10 @@ export const commenRelations = relations(comments, ({ one }) => ({
   parent: one(comments, {
     fields: [comments.parent_id],
     references: [comments.id],
+  }),
+  post: one(posts, {
+    fields: [comments.post_id],
+    references: [posts.id],
   }),
 }));
 
@@ -203,4 +209,36 @@ export const tagRelations = relations(tags, ({ many, one }) => ({
   }),
   transactions: many(transactions),
   standingOrders: many(standingOrders),
+}));
+
+export const posts = createTable("posts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+
+  user_id: uuid("user_id")
+    .notNull()
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
+
+  goal_id: uuid("goal_id").references(() => goals.id),
+  transaction_id: uuid("transaction_id").references(() => transactions.id),
+
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }),
+});
+
+export const postRelations = relations(posts, ({ one, many }) => ({
+  goal: one(goals, {
+    fields: [posts.goal_id],
+    references: [goals.id],
+  }),
+  transaction: one(transactions, {
+    fields: [posts.transaction_id],
+    references: [transactions.id],
+  }),
+  user: one(users, {
+    fields: [posts.user_id],
+    references: [users.id],
+  }),
+  comments: many(comments),
 }));
