@@ -15,10 +15,11 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
     const body = await request.json();
-    const { user_id, name, amount, target, target_date } = body;
+    const { user_id, name, description, amount, target, target_date } = body;
 
+    console.log("Creating new goal with description:", description);
     try {
-        const newGoal = await addGoal(user_id, name, amount, target, target_date ? new Date(target_date) : undefined);
+        const newGoal = await addGoal(user_id, name, description, amount, target, target_date ? new Date(target_date) : undefined);
         return new Response(JSON.stringify(newGoal[0]), {
             headers: {
                 "Content-Type": "application/json",

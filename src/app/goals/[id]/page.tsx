@@ -22,6 +22,7 @@ import { Button } from "~/components/ui/button";
 import { AddFundsDialog } from "./add-funds-dialog";
 import { RemoveFundsDialog } from "./remove-funds-dialog";
 import { ShareGoalDialog } from "./share-goal-dialog";
+import { validateGoalCheckpointsWithDates } from "~/server/queries/goal_checkpoints";
 
 export default async function GoalDetailPage({
   params,
@@ -34,6 +35,9 @@ export default async function GoalDetailPage({
   if (!goal) {
     return <div>Goal not found</div>;
   }
+
+  const out = await validateGoalCheckpointsWithDates(id);
+  console.log(out);
 
   return (
     <div className="space-y-6">

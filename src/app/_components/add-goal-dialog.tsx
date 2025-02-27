@@ -27,6 +27,7 @@ export function AddGoalDialog() {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const [goalName, setGoalName] = useState("");
+  const [goalDescription, setGoalDescription] = useState("");
   const [target, setTarget] = useState("");
   const [targetDate, setTargetDate] = useState("");
   const [intervalAmount, setIntervalAmount] = useState("");
@@ -49,6 +50,7 @@ export function AddGoalDialog() {
             .find((row) => row.startsWith("selectedUserId="))
             ?.split("=")[1] ?? "c3b9cd23-1298-41a1-889c-8f7639aff150",
         name: goalName,
+        description: goalDescription,
         target: parseFloat(target),
         target_date: targetDate ? new Date(targetDate) : undefined,
       });
@@ -105,6 +107,21 @@ export function AddGoalDialog() {
               placeholder="Enter goal name"
               value={goalName}
               onChange={(e) => setGoalName(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <label
+              htmlFor="goalDescription"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Goal Description
+            </label>
+            <Input
+              id="goalDescription"
+              placeholder="Enter goal description"
+              value={goalDescription}
+              onChange={(e) => setGoalDescription(e.target.value)}
               required
             />
           </div>
