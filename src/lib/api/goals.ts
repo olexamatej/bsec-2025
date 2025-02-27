@@ -9,14 +9,14 @@ export function getGoalsClient(id: string) {
     return data;
 }
 
-export function addGoalClient(goal: {
+export async function addGoalClient(goal: {
     user_id: string;
     name: string;
     amount: number;
     target: number;
     target_date?: Date;
 }) {
-    const data = apiRequest<typeof goals.$inferSelect>(`/api/goals`, {
+    const data = await apiRequest<typeof goals.$inferSelect>(`/api/goals`, {
         method: "POST",
         body: JSON.stringify(goal),
     });
@@ -30,4 +30,14 @@ export function deleteGoalClient(id: string) {
     });
 
     return data;
-} 
+}
+
+export function addGoalCheckpointClient(goal_id: string, interval_amount: number, interval: number, interval_start: Date) {
+    const data = apiRequest<typeof goals.$inferSelect>(`/api/goals/checkpoints`, {
+        method: "POST",
+        body: JSON.stringify({ goal_id, interval_amount, interval, interval_start }),
+    });
+
+    return data;
+}
+

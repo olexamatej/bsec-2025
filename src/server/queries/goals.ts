@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { goals } from "../db/schema";
+import { goalCheckpoints, goals } from "../db/schema";
 
 export const addGoal = async (
     user_id: string,
@@ -15,12 +15,15 @@ export const addGoal = async (
         amount,
         target,
         target_date: target_date,
-    });
+    }).returning();
 };
 
 export const getGoalsByUserId = async (user_id: string) => {
     return await db.query.goals.findMany({
         where: eq(goals.user_id, user_id),
+        with: {
+            checkpoints: true,
+        },
     });
 };
 
@@ -31,7 +34,18 @@ export const deleteGoal = async (id: string) => {
 export const getGoalById = async (id: string) => {
     return await db.query.goals.findFirst({
         where: eq(goals.id, id),
+        with: {
+            checkpoints: true,
+        }
     });
 }
 
-export type GoalWithDeps = Awaited<ReturnType<typeof getGoalsByUserId>>[number]; 
+export type GoalWithDeps = Awaited<ReturnType<typeof getGoalsByUserId>>[number];
+
+export const addGoalCheckpoint = async (goal_id: string, interval_amount: number, interval: number) => {
+    return await db.insert(goalCheckpoints).values({
+        goal_id,
+        interval_amount,
+        interval,
+    });
+};

@@ -113,7 +113,7 @@ export const goalCheckpoints = createTable("goal_checkpoints", {
   interval_start: timestamp("interval_start", {
     mode: "date",
     withTimezone: true,
-  }).notNull(),
+  }).notNull().default(sql`NOW()`),
   interval: integer("interval").notNull(),
   interval_amount: integer("interval_amount").notNull(),
 });
