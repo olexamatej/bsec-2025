@@ -69,21 +69,26 @@ export default function Leaderboard({
                 className="cursor-pointer transition-colors hover:bg-muted/50"
                 onClick={() => handleUserClick(user.id)}
               >
-                <TableCell className="font-medium">
+                <TableCell className="p-0 text-center">
                   {user.rank === 1 ? (
-                    <Badge className="bg-yellow-500 hover:bg-yellow-600">
-                      🏆 {user.rank}
+                    <Badge className="inline-flex h-full w-full items-center justify-center rounded-sm bg-yellow-500 text-lg font-medium hover:bg-yellow-600">
+                      <span className="mr-1 text-xl">🏆</span>
+                      {user.rank}
                     </Badge>
                   ) : user.rank === 2 ? (
-                    <Badge className="bg-gray-400 hover:bg-gray-500">
-                      🥈 {user.rank}
+                    <Badge className="inline-flex h-full w-full items-center justify-center rounded-sm bg-gray-400 text-lg font-medium hover:bg-gray-500">
+                      <span className="mr-1 text-xl">🥈</span>
+                      {user.rank}
                     </Badge>
                   ) : user.rank === 3 ? (
-                    <Badge className="bg-amber-600 hover:bg-amber-700">
-                      🥉 {user.rank}
+                    <Badge className="inline-flex h-full w-full items-center justify-center rounded-sm bg-amber-600 text-lg font-medium hover:bg-amber-700">
+                      <span className="mr-1 text-xl">🥉</span>
+                      {user.rank}
                     </Badge>
                   ) : (
-                    <span>{user.rank}</span>
+                    <Badge className="inline-flex h-full w-full items-center justify-center rounded-sm bg-slate-200 text-lg font-medium text-slate-700 hover:bg-slate-300">
+                      {user.rank}
+                    </Badge>
                   )}
                 </TableCell>
                 <TableCell>
