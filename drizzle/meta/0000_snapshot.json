@@ -1,5 +1,5 @@
 {
-  "id": "30559540-4258-48a4-b528-d4b22b515c42",
+  "id": "550236a0-fab4-42dc-b753-400b0a18f4ba",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -14,6 +14,12 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
+        },
+        "post_id": {
+          "name": "post_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "parent_id": {
           "name": "parent_id",
@@ -43,6 +49,19 @@
       },
       "indexes": {},
       "foreignKeys": {
+        "bsec-2025_comments_post_id_bsec-2025_posts_id_fk": {
+          "name": "bsec-2025_comments_post_id_bsec-2025_posts_id_fk",
+          "tableFrom": "bsec-2025_comments",
+          "tableTo": "bsec-2025_posts",
+          "columnsFrom": [
+            "post_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
         "bsec-2025_comments_parent_id_bsec-2025_comments_id_fk": {
           "name": "bsec-2025_comments_parent_id_bsec-2025_comments_id_fk",
           "tableFrom": "bsec-2025_comments",
@@ -151,6 +170,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "target": {
+          "name": "target",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "timestamp": {
           "name": "timestamp",
           "type": "timestamp with time zone",
@@ -166,6 +191,93 @@
           "tableTo": "bsec-2025_users",
           "columnsFrom": [
             "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.bsec-2025_posts": {
+      "name": "bsec-2025_posts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "goal_id": {
+          "name": "goal_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "transaction_id": {
+          "name": "transaction_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "bsec-2025_posts_user_id_bsec-2025_users_id_fk": {
+          "name": "bsec-2025_posts_user_id_bsec-2025_users_id_fk",
+          "tableFrom": "bsec-2025_posts",
+          "tableTo": "bsec-2025_users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "bsec-2025_posts_goal_id_bsec-2025_goals_id_fk": {
+          "name": "bsec-2025_posts_goal_id_bsec-2025_goals_id_fk",
+          "tableFrom": "bsec-2025_posts",
+          "tableTo": "bsec-2025_goals",
+          "columnsFrom": [
+            "goal_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "bsec-2025_posts_transaction_id_bsec-2025_transactions_id_fk": {
+          "name": "bsec-2025_posts_transaction_id_bsec-2025_transactions_id_fk",
+          "tableFrom": "bsec-2025_posts",
+          "tableTo": "bsec-2025_transactions",
+          "columnsFrom": [
+            "transaction_id"
           ],
           "columnsTo": [
             "id"
@@ -208,7 +320,7 @@
         },
         "interval_start": {
           "name": "interval_start",
-          "type": "integer",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
@@ -217,6 +329,19 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
+        },
+        "interval": {
+          "name": "interval",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
         },
         "interval_amount": {
           "name": "interval_amount",
@@ -341,6 +466,13 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
         },
         "transaction_type": {
           "name": "transaction_type",

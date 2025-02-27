@@ -1,6 +1,6 @@
 {
-  "id": "ab165103-29fd-46e1-be6b-56e4944e286e",
-  "prevId": "30559540-4258-48a4-b528-d4b22b515c42",
+  "id": "b3b86175-dd66-41e2-8bf5-aeb5ecaa187f",
+  "prevId": "ab165103-29fd-46e1-be6b-56e4944e286e",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -170,6 +170,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "target": {
+          "name": "target",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "timestamp": {
           "name": "timestamp",
           "type": "timestamp with time zone",
@@ -276,7 +282,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -387,6 +393,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "color": {
+          "name": "color",
+          "type": "varchar(6)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "name": {
           "name": "name",
           "type": "text",
@@ -447,6 +459,13 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
         },
         "transaction_type": {
           "name": "transaction_type",
