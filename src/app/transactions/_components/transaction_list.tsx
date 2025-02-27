@@ -13,7 +13,7 @@ import {
 } from "~/components/ui/select";
 import { Trash2, Search, ArrowUpDown } from "lucide-react";
 import { Transaction } from "~/server/db/schema";
-import { useIsMounted } from "~/lib/utils";
+import { useIsMounted } from "~/lib/use-is-mounted";
 
 export function TransactionList(transactions: { transactions: Transaction[] }) {
   const [searchTerm, setSearchTerm] = useState("");
