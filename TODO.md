@@ -12,3 +12,12 @@ prepocitanie penazi na nejake body, nech to je relativne
 
 prepojenie so socialnou sietou?
 moznost socialne interakcie?
+
+###
+
+- [] dashboard
+- [] vytvaranie novych cielov
+- [] leaderboard
+- [] gamified stromceky ci co
+- [] socialna interakcia
+- [] ai agent napojenie
