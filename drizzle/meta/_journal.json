@@ -8,6 +8,13 @@
       "when": 1740658585583,
       "tag": "0000_groovy_gertrude_yorkes",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740654545149,
+      "tag": "0002_aromatic_mentor",
+      "breakpoints": true
     }
   ]
 }
