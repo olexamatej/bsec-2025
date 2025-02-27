@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { type Goal } from "~/server/db/schema";
 import { Card, CardContent } from "~/components/ui/card";
 import { PlantVisualizerHover } from "./plant-visualizer-hover";
 import { type UserWithDeps } from "~/server/queries/user";
@@ -24,7 +23,7 @@ export default function Meadow({
 
   const handleCopy = () => {
     navigator.clipboard.writeText(
-      window.location.href + "?user_id=" + user?.id,
+      window.location.href.split("?")[0] + "?user_id=" + user?.id,
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -99,7 +98,7 @@ export default function Meadow({
           </CardContent>
         </Card>
         {copied && (
-          <div className="absolute right-0 top-0 mr-2 mt-2 rounded bg-green-500 p-2 text-white">
+          <div className="absolute right-0 top-0 mr-2 mt-2 rounded bg-slate-800 p-2 text-green-500">
             Link copied!
           </div>
         )}
