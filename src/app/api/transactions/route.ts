@@ -15,10 +15,10 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
     const body = await request.json();
-    const { user_id, amount, tag_id, timestamp, transaction_type } = body;
+    const { user_id, amount, tag_id, timestamp, transaction_type, description } = body;
 
     try {
-        await addTransaction(user_id, amount, tag_id ?? null, timestamp);
+        await addTransaction(user_id, amount, tag_id ?? null, timestamp, description, transaction_type);
         return new Response(JSON.stringify({ success: true }), {
             headers: {
                 "Content-Type": "application/json",
