@@ -27,7 +27,7 @@ const progress_to_stage = (progress: number): string => {
   }
 };
 
-export function PlantVisualizer({
+export function PlantVisualizerHover({
   style,
   goal,
   show_name = false,
@@ -43,19 +43,30 @@ export function PlantVisualizer({
   const progress = (goal.amount / goal.target) * 100;
   const imagePath = progress_to_stage(progress);
   return (
-    <div style={style}>
-      <Image
-        src={imagePath}
-        alt="MLEMLEMFL"
-        width={width}
-        height={height}
-        className="animate-sway"
-      />
-      {show_name && (
-        <p className="-mb-2 text-center text-lg font-bold text-black">
-          {goal.name}
-        </p>
-      )}
-    </div>
+    <HoverCard>
+      <HoverCardTrigger asChild>
+        <div
+          className="absolute cursor-pointer"
+          style={style}
+          onClick={() => redirect(`/goals/${goal.id}`)}
+        >
+          <Image
+            src={imagePath}
+            alt="MLEMLEMFL"
+            width={width}
+            height={height}
+            className="animate-sway"
+          />
+          {show_name && (
+            <p className="-mb-2 text-center text-lg font-bold text-black">
+              {goal.name}
+            </p>
+          )}
+        </div>
+      </HoverCardTrigger>
+      <HoverCardContent className="w-160">
+        <GoalCard goal={goal} />
+      </HoverCardContent>
+    </HoverCard>
   );
 }
