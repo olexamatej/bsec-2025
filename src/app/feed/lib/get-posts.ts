@@ -12,7 +12,11 @@ export async function getPosts() {
         },
       },
       user: true,
-      goal: true,
+      goal: {
+        with: {
+          user: true,
+        },
+      },
       transaction: {
         with: {
           tag: true,

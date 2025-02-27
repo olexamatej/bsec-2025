@@ -35,7 +35,7 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
     .reduce((sum, t) => sum + t.amount, 0);
 
   return (
-    <div className="container mx-auto max-w-7xl space-y-4 px-4">
+    <div className="container mx-auto max-w-7xl space-y-6 px-4 py-6">
       <div className="flex items-center gap-4">
         <Avatar className="h-16 w-16">
           <AvatarImage src={user.avatar_url || ""} alt={user.display_name} />
@@ -148,29 +148,12 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
                             {transaction.description}
                           </p>
                           {transaction.tag_id && (
-                            <span
-                              className="rounded-xl border px-2 py-1 text-sm"
-                              style={{
-                                color: `#${
-                                  tags.find(
-                                    (tag) => tag.id === transaction.tag_id,
-                                  )?.color || "defaultColor"
-                                }`,
-                                backgroundColor: `#${
-                                  tags.find(
-                                    (tag) => tag.id === transaction.tag_id,
-                                  )?.color || "defaultColor"
-                                }20`,
-                                borderColor: `#${
-                                  tags.find(
-                                    (tag) => tag.id === transaction.tag_id,
-                                  )?.color || "defaultColor"
-                                }`,
-                              }}
-                            >
-                              #{" "}
-                              {tags.find((tag) => tag.id === transaction.tag_id)
-                                ?.name || "No tag"}
+                            <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">
+                              {
+                                tags.find(
+                                  (tag) => tag.id === transaction.tag_id,
+                                )?.name
+                              }
                             </span>
                           )}
                         </div>

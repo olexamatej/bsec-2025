@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { useRouter } from "next/navigation";
 
 interface UserSelectorProps {
   users: User[];
@@ -16,12 +15,10 @@ interface UserSelectorProps {
 }
 
 export function UserSelector({ users, selectedUserId }: UserSelectorProps) {
-  const router = useRouter();
-
   const handleUserChange = (userId: string) => {
     // Set cookie with 30 day expiry
     document.cookie = `selectedUserId=${userId};path=/;max-age=2592000;SameSite=Lax`;
-    router.refresh();
+    window.location.reload();
   };
 
   return (
