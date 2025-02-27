@@ -28,4 +28,10 @@ export const deleteGoal = async (id: string) => {
     return await db.delete(goals).where(eq(goals.id, id));
 };
 
+export const getGoalById = async (id: string) => {
+    return await db.query.goals.findFirst({
+        where: eq(goals.id, id),
+    });
+}
+
 export type GoalWithDeps = Awaited<ReturnType<typeof getGoalsByUserId>>[number]; 
