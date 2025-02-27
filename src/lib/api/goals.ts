@@ -12,6 +12,7 @@ export function getGoalsClient(id: string) {
 export async function addGoalClient(goal: {
     user_id: string;
     name: string;
+    description: string;
     amount: number;
     target: number;
     target_date?: Date;
