@@ -41,6 +41,8 @@ export const transactions = createTable(
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
     accountId: integer("account_id").notNull().references(() => accounts.id),
+    description: varchar("description", { length: 256 }).notNull().default(""),
+    category: varchar("category", { length: 256 }).notNull().default(""),
     amount: integer("amount").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
