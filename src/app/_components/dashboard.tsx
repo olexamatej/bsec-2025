@@ -126,7 +126,7 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
                 .slice(0, 5)
                 .map((transaction) => (
                   <Link key={transaction.id} href={`/transactions`}>
-                    <div className="flex items-center justify-between rounded-lg p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800">
+                    <div className="flex items-center justify-between rounded-lg p-3 transition-colors hover:bg-background dark:hover:bg-slate-800">
                       <div className="flex items-center gap-4">
                         <div
                           className={`flex h-12 w-12 items-center justify-center rounded-full ${
@@ -242,7 +242,7 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
                     <Link key={goal.id} href={`/goals/${goal.id}`}>
                       <div
                         key={goal.id}
-                        className="space-y-3 rounded-lg p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
+                        className="space-y-3 rounded-lg p-3 transition-colors hover:bg-background dark:hover:bg-slate-800"
                       >
                         <div className="flex items-center justify-between">
                           <div>
