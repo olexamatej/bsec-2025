@@ -16,11 +16,15 @@ moznost socialne interakcie?
 PRIDANIE PENAZI DO NAHODNEHO CIELU
 (duolingo) STREAK !! ak clovek pravidelne setri
 
+sharuj zahradu s inymi hracmi
+
+AVG
+
 ###
 
 - [x] dashboard
 - [] vytvaranie novych cielov
 - [] leaderboard
-- [] gamified stromceky ci co
+- [x] gamified stromceky ci co
 - [] socialna interakcia
 - [] ai agent napojenie

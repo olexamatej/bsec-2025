@@ -88,9 +88,11 @@ export const goals = createTable("goals", {
   amount: integer("amount").notNull(),
   target: integer("target").notNull(),
   description: text("description").notNull().default(""),
-  target_date: timestamp("target_timestamp", { mode: "date", withTimezone: true }),
+  target_date: timestamp("target_timestamp", {
+    mode: "date",
+    withTimezone: true,
+  }),
 });
-
 
 export type Goal = typeof goals.$inferSelect;
 export type InsertGoal = typeof goals.$inferInsert;
