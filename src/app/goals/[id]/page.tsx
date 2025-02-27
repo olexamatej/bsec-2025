@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
@@ -50,7 +51,6 @@ export default async function GoalDetailPage({
                 <div className="space-x-2">
                   <RemoveFundsDialog goal_id={id} />
                   <AddFundsDialog goal_id={id} />
-                  <ShareGoalDialog goal_id={id} />
                 </div>
                 {/* <Button className="ml-4">Add funds</Button> */}
               </div>
@@ -94,6 +94,14 @@ export default async function GoalDetailPage({
               </div>
             </div>
           </CardContent>
+          <CardFooter>
+            <div className="flex w-full justify-end">
+              <div className="space-x-2">
+                <ShareGoalDialog goal_id={id} />
+              </div>
+              {/* <Button className="ml-4">Add funds</Button> */}
+            </div>
+          </CardFooter>
         </Card>
         <Card className="md:col-span-1">
           <CardHeader>
