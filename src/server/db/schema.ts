@@ -45,9 +45,11 @@ export const comments = createTable("comments", {
 
   post_id: uuid("post_id")
     .notNull()
-    .references(() => posts.id),
+    .references(() => posts.id, { onDelete: "cascade" }),
 
-  parent_id: uuid("parent_id").references((): AnyPgColumn => comments.id),
+  parent_id: uuid("parent_id").references((): AnyPgColumn => comments.id, {
+    onDelete: "cascade",
+  }),
 
   user_id: uuid("user_id")
     .notNull()
@@ -287,97 +289,3 @@ export const goalTransactionRelations = relations(
     }),
   }),
 );
-
-export const userBalanceView = pgView("user_balance").as((qb) => {
-  const incomingUnion = qb
-    .select({
-      user_id: transactions.user_id,
-      amount: transactions.amount,
-    })
-    .from(transactions)
-    .where(eq(transactions.transaction_type, "incoming"))
-    .unionAll(
-      qb
-        .select({
-          user_id: standingOrders.user_id,
-          amount: sql<number>`(DIV((LEAST(COALESCE(EXTRACT(EPOCH FROM ${standingOrders.interval_end}), EXTRACT(EPOCH FROM now())), EXTRACT(EPOCH FROM now())) - EXTRACT(EPOCH FROM ${standingOrders.interval_start})), ${standingOrders.interval}) + 1) * ${standingOrders.amount}`,
-        })
-        .from(standingOrders)
-        .where(eq(standingOrders.order_type, "incoming")),
-    )
-    .unionAll(
-      qb
-        .select({
-          user_id: goals.user_id,
-          amount: goalTransactions.amount,
-        })
-        .from(goalTransactions)
-        .where(eq(goalTransactions.order_type, "outgoing"))
-        .innerJoin(goals, eq(goalTransactions.goal_id, goals.id)),
-    )
-    .as("incoming_union");
-
-  const totalIncoming = qb
-    .with(incomingUnion)
-    .select({
-      user_id: incomingUnion.user_id,
-      amount: sql`sum(${incomingUnion.amount})`
-        .mapWith(Number)
-        .as("incoming_amount"),
-    })
-    .from(incomingUnion)
-    .groupBy(incomingUnion.user_id)
-    .as("total_incoming");
-
-  const outgoingUnion = qb
-    .select({
-      user_id: transactions.user_id,
-      amount: transactions.amount,
-    })
-    .from(transactions)
-    .where(eq(transactions.transaction_type, "outgoing"))
-    .unionAll(
-      qb
-        .select({
-          user_id: standingOrders.user_id,
-          amount: sql<number>`(DIV((LEAST(COALESCE(EXTRACT(EPOCH FROM ${standingOrders.interval_end}), EXTRACT(EPOCH FROM now())), EXTRACT(EPOCH FROM now())) - EXTRACT(EPOCH FROM ${standingOrders.interval_start})), ${standingOrders.interval}) + 1) * ${standingOrders.amount}`,
-        })
-        .from(standingOrders)
-        .where(eq(standingOrders.order_type, "outgoing")),
-    )
-    .unionAll(
-      qb
-        .select({
-          user_id: goals.user_id,
-          amount: goalTransactions.amount,
-        })
-        .from(goalTransactions)
-        .where(eq(goalTransactions.order_type, "incoming"))
-        .innerJoin(goals, eq(goalTransactions.goal_id, goals.id)),
-    )
-    .as("outgoing_union");
-
-  const totalOutgoing = qb
-    .with(outgoingUnion)
-    .select({
-      user_id: outgoingUnion.user_id,
-      amount: sql`sum(${outgoingUnion.amount})`
-        .mapWith(Number)
-        .as("outgoing_amount"),
-    })
-    .from(outgoingUnion)
-    .groupBy(outgoingUnion.user_id)
-    .as("total_outgoing");
-
-  return qb
-    .select({
-      user_id: users.id,
-      amount:
-        sql<number>`coalesce(${totalIncoming.amount},0) - coalesce(${totalOutgoing.amount},0)`
-          .mapWith(Number)
-          .as("amount"),
-    })
-    .from(users)
-    .leftJoin(totalIncoming, eq(users.id, totalIncoming.user_id))
-    .leftJoin(totalOutgoing, eq(users.id, totalOutgoing.user_id));
-});

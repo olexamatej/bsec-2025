@@ -14,7 +14,12 @@ export function PostTransaction({
             {transaction.user.display_name}{" "}
             {transaction.transaction_type === "incoming" ? "received" : "spent"}
           </span>
-          <span className="text-4xl font-medium">{transaction.amount} Kč</span>
+          <span className="text-4xl font-medium">
+            {transaction.amount.toLocaleString(undefined, {
+              currency: "USD",
+              style: "currency",
+            })}
+          </span>
         </div>
         <div className="flex flex-col items-end justify-center space-y-2">
           <span>{transaction.description}</span>
