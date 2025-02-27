@@ -18,11 +18,12 @@ import {
  */
 export const createTable = pgTableCreator((name) => `bsec-2025_${name}`);
 
-export const posts = createTable(
-  "post",
+export const accounts = createTable(
+  "account",
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
     name: varchar("name", { length: 256 }),
+    balance: integer("balance").default(0).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -30,7 +31,22 @@ export const posts = createTable(
       () => new Date()
     ),
   },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
 );
+
+export type Account = typeof accounts.$inferSelect;
+export type AccountInsert = typeof accounts.$inferInsert;
+
+export const transactions = createTable(
+  "transaction",
+  {
+    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+    accountId: integer("account_id").notNull().references(() => accounts.id),
+    amount: integer("amount").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  }
+);
+
+export type Transaction = typeof transactions.$inferSelect;
+export type TransactionInsert = typeof transactions.$inferInsert;
