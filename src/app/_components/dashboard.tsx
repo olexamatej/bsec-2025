@@ -14,6 +14,7 @@ import { ArrowDown, ArrowUp, DollarSign } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { getUserById } from "~/server/queries/user";
 import { AddGoalDialog } from "~/app/_components/add-goal-dialog"; // adjust the path as needed
+import Link from "next/link";
 
 interface DashboardProps {
   user: NonNullable<Awaited<ReturnType<typeof getUserById>>>;
@@ -160,27 +161,29 @@ export function Dashboard({ user, balance }: DashboardProps) {
                   (goal.amount / goal.target) * 100,
                 );
                 return (
-                  <div key={goal.id} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium">{goal.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          Due{" "}
-                          {goal.target_date
-                            ? goal.target_date.toDateString()
-                            : "No date set"}
-                        </p>
+                  <Link href={`/goals/${goal.id}`} passHref key={goal.id}>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">{goal.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            Due{" "}
+                            {goal.target_date
+                              ? goal.target_date.toDateString()
+                              : "No date set"}
+                          </p>
+                        </div>
+                        <Badge
+                          variant={
+                            progressPercentage > 50 ? "default" : "outline"
+                          }
+                        >
+                          ${goal.amount} / ${goal.target}
+                        </Badge>
                       </div>
-                      <Badge
-                        variant={
-                          progressPercentage > 50 ? "default" : "outline"
-                        }
-                      >
-                        ${goal.amount} / ${goal.target}
-                      </Badge>
+                      <Progress value={progressPercentage} className="h-2" />
                     </div>
-                    <Progress value={progressPercentage} className="h-2" />
-                  </div>
+                  </Link>
                 );
               })}
             </div>

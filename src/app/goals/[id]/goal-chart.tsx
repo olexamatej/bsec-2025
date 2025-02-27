@@ -6,7 +6,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../../../components/ui/chart";
-import { Label, Pie, PieChart } from "recharts";
+import { Label, LabelList, Pie, PieChart } from "recharts";
 
 interface GoalChartProps {
   progress: number;
@@ -53,6 +53,15 @@ export function GoalChart({ progress, total }: GoalChartProps) {
           nameKey="browser"
           innerRadius={60}
         >
+          <LabelList
+            dataKey="browser"
+            className="fill-black"
+            stroke="none"
+            fontSize={16}
+            formatter={(value: keyof typeof chartConfig) =>
+              chartData.find((d) => d.browser === value)?.visitors + " " + value
+            }
+          />
           <Label
             content={({ viewBox }) => {
               if (viewBox && "cx" in viewBox && "cy" in viewBox) {

@@ -8,3 +8,11 @@ export function getUserClient(id: string) {
 
     return data;
 }
+
+export function getUsersClient() {
+    const data = apiRequest<User[]>(`/api/users`, {
+        method: "GET",
+    })
+
+    return data;
+}

@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { GoalChart } from "~/app/goals/[id]/GoalChart";
+import { GoalChart } from "~/app/goals/[id]/goal-chart";
 
 export default async function GoalDetailPage({
   params,
@@ -31,7 +31,7 @@ export default async function GoalDetailPage({
             <CardDescription>Target {goal.target}</CardDescription>
           </CardHeader>
           <CardContent>
-            <GoalChart progress={275} total={475} />
+            <GoalChart progress={goal.amount} total={goal.target} />
           </CardContent>
         </Card>
 

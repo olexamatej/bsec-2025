@@ -11,3 +11,7 @@ export const getUserById = async (id: string) => {
     },
   });
 };
+
+export const getUsers = async () => {
+  return await db.query.users.findMany();
+}
