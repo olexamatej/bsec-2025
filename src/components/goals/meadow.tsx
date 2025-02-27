@@ -52,6 +52,7 @@ export default function Meadow({ flowers }: { flowers: Array<Goal> }) {
         <PlantVisualizer
           goal={flower}
           key={index}
+          show_name={true}
           style={{
             top: positions[index]?.top,
             left: positions[index]?.left,

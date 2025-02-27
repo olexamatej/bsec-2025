@@ -1,3 +1,5 @@
+"use client";
+
 import type React from "react";
 import Image from "next/image";
 import {
@@ -28,9 +30,15 @@ const progress_to_stage = (progress: number): string => {
 export function PlantVisualizer({
   style,
   goal,
+  show_name = false,
+  height = 80,
+  width = 80,
 }: {
   style: React.CSSProperties;
   goal: Goal;
+  show_name?: boolean;
+  height?: number;
+  width?: number;
 }) {
   const progress = (goal.amount / goal.target) * 100;
   const imagePath = progress_to_stage(progress);
@@ -45,13 +53,15 @@ export function PlantVisualizer({
           <Image
             src={imagePath}
             alt="MLEMLEMFL"
-            width={80}
-            height={80}
+            width={width}
+            height={height}
             className="animate-sway"
           />
-          <p className="-mb-2 text-center text-lg font-bold text-black">
-            {goal.name}
-          </p>
+          {show_name && (
+            <p className="-mb-2 text-center text-lg font-bold text-black">
+              {goal.name}
+            </p>
+          )}
         </div>
       </HoverCardTrigger>
       <HoverCardContent className="w-160">

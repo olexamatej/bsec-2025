@@ -6,7 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { GoalChart } from "~/app/goals/[id]/GoalChart";
+import { GoalChart } from "~/app/goals/[id]/goal-chart";
+import { PlantVisualizer } from "~/components/goals/plant-visualizer";
 
 export default async function GoalDetailPage({
   params,
@@ -27,20 +28,30 @@ export default async function GoalDetailPage({
         {/* Recent Transactions */}
         <Card className="md:col-span-1">
           <CardHeader>
+            <CardTitle>
+              <h4 className="text-xl font-bold">{goal.name}</h4>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {/* <div className="rounded-lg border-2 border-gray-200"> */}
+            <div>
+              <PlantVisualizer
+                goal={goal}
+                style={{}}
+                width={200}
+                height={200}
+              />
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="md:col-span-1">
+          <CardHeader>
             <CardTitle>{goal.name}</CardTitle>
             <CardDescription>Target {goal.target}</CardDescription>
           </CardHeader>
           <CardContent>
             <GoalChart progress={275} total={475} />
           </CardContent>
-        </Card>
-
-        {/* Idk */}
-        <Card className="md:col-span-1">
-          <CardHeader>
-            <CardTitle>Ahoj</CardTitle>
-          </CardHeader>
-          <CardContent></CardContent>
         </Card>
       </div>
     </div>
