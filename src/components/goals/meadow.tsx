@@ -23,7 +23,9 @@ export default function Meadow({
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(
+      window.location.href + "?user_id=" + user?.id,
+    );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

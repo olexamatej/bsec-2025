@@ -227,9 +227,12 @@ export function Dashboard({ user, balance, tags }: DashboardProps) {
                 })}
             </div>
           </CardContent>
-          <CardFooter className="mt-auto">
-            <Button className="w-full">
+          <CardFooter className="mt-auto space-x-2 p-2">
+            <Button className="w-1/2 px-2">
               <a href="/goals">View all goals</a>
+            </Button>
+            <Button className="w-1/2 px-2">
+              <a href="/random-invest">Invest in random goal</a>
             </Button>
           </CardFooter>
         </Card>

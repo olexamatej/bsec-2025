@@ -118,16 +118,12 @@ export function StandingOrderList(data: {
                   <div className="text-sm text-muted-foreground">
                     {order.description}
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Every {order.interval_amount}{" "}
-                    {order.interval === 1 ? "day" : "days"}
-                  </div>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-muted-foreground">
                     {isMounted
-                      ? `${new Date(order.interval_start).toLocaleDateString()} - ${new Date(order.interval_end).toLocaleDateString()}`
+                      ? `${new Date(order.interval_start).toLocaleDateString()}`
                       : ""}
                   </span>
                   <Button

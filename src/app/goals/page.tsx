@@ -1,7 +1,6 @@
 "no cache";
 import Meadow from "~/components/goals/meadow";
 import { getUserId } from "~/lib/get-user-id";
-import { getGoalsByUserId } from "~/server/queries/goals";
 import { getUserById } from "~/server/queries/user";
 
 export default async function Page({
