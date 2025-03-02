@@ -4,6 +4,8 @@
 
 **BSEC** is a hackathon designed for students of Brno University of Technology. Within BSEC, we have participated in the **CODE IT! Challenge**, a category focused on coding. This year's assignment was provided by **FNZ**, and the goal was to develop a personal financial management web application with a unique twist—gamification.
 
+🚀 We had only 12 hours to complete the project, and we successfully finished in first place! 🏆
+
 ![Hackathon](README-images/image-9.png)
 
 ---
